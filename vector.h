@@ -17,7 +17,7 @@ struct vector {
     int size;
     int member_size;
     int capacity;
-    char data[];
+    void *data;
 };
 
 static struct vector* create_vector(const int capacity, const int member_size);
