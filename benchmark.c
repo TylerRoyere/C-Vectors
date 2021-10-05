@@ -13,8 +13,6 @@ main(void)
         struct i32_vector iv = create_i32_vector(LOOPS+1);
         struct i32_vector iv2 = create_i32_vector(LOOPS+1);
 
-        uint32_t sum = 0;
-
         for (int ii = 0; ii < LOOPS; ii++) {
             iv = vec_push(iv, ii);
         }
