@@ -6,7 +6,7 @@
 #include "vector.h"
 
 #define FLEX_ARRAY_VEC_SIZE(member_size, count) \
-    (sizeof(struct vector) + (size_t)((size_t)(count) * (size_t)(member_size)))
+    (sizeof(struct vector) + (size_t)((count) << member_size))
 
 #define NULLABLE_ASSIGNMENT(type, ptr) \
     NULLABLE_ASSIGNMENT_MAKE_NAME(type, ptr, __COUNTER__)

@@ -101,4 +101,6 @@ GENERATE_VECTOR_FUNCTION_PROTOTYPES(generic_vector, void*, true);
 #undef GENERATE_VECTOR_STRUCTURE
 #undef GENERATE_VECTOR_FUNCTION_PROTOTYPES
 
+#include "vector.c"
+
 #endif

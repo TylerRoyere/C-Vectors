@@ -20,24 +20,24 @@ struct vector {
     char data[];
 };
 
-struct vector* create_vector(const int capacity, const int member_size);
-struct vector* create_vector_cleared(const int capacity, const int member_size);
-void vector_fill_value(struct vector* vv, void* fill);
-void vector_fill(struct vector* vv);
-int destroy_vector(struct vector* vv);
+static struct vector* create_vector(const int capacity, const int member_size);
+static struct vector* create_vector_cleared(const int capacity, const int member_size);
+static void vector_fill_value(struct vector* vv, void* fill);
+static void vector_fill(struct vector* vv);
+static int destroy_vector(struct vector* vv);
 
-int vector_size(struct vector* vv);
-struct vector* vector_resize(struct vector* vv, const int new_capacity);
+static int vector_size(struct vector* vv);
+static struct vector* vector_resize(struct vector* vv, const int new_capacity);
 
-int vector_get(struct vector* vv, const int index, void* ret);
-int vector_set(struct vector* vv, const int index, const void* val);
-int vector_get_ref(struct vector* vv, const int index, void** ret);
+static int vector_get(struct vector* vv, const int index, void* ret);
+static int vector_set(struct vector* vv, const int index, const void* val);
+static int vector_get_ref(struct vector* vv, const int index, void** ret);
 
-struct vector* vector_push(struct vector* vv, void* data);
-struct vector* vector_pop(struct vector* vv, void* ret);
-int vector_last(struct vector* vv, void** ret);
+static struct vector* vector_push(struct vector* vv, void* data);
+static struct vector* vector_pop(struct vector* vv, void* ret);
+static int vector_last(struct vector* vv, void** ret);
 
-void* vector_data(struct vector* vv);
+static void* vector_data(struct vector* vv);
 
 
 #endif

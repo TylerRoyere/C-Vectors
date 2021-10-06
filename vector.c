@@ -1,3 +1,6 @@
+#ifndef VECTOR_C
+#define VECTOR_C
+
 #include <string.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -92,7 +95,7 @@ vector_fill(struct vector* vv)
 inline int
 destroy_vector(struct vector* vv)
 {
-    memset(vv, 0, FLEX_ARRAY_VEC_SIZE(pow_of_2(vv->member_size), vv->capacity));
+    memset(vv, 0, FLEX_ARRAY_VEC_SIZE(vv->member_size, vv->capacity));
     free(vv);
     return 0;
 }
@@ -108,7 +111,7 @@ vector_resize(struct vector* vv, const int new_capacity)
 {
     ASSERT(new_capacity > 0);
 
-    vv = realloc(vv, FLEX_ARRAY_VEC_SIZE(pow_of_2(vv->member_size), new_capacity));
+    vv = realloc(vv, FLEX_ARRAY_VEC_SIZE(vv->member_size, new_capacity));
 
     ASSERT(vv != NULL);
 
@@ -155,7 +158,7 @@ inline struct vector*
 vector_push(struct vector* vv, void* data)
 {
     if (vv->size == vv->capacity) {
-        vv = realloc(vv, FLEX_ARRAY_VEC_SIZE(pow_of_2(vv->member_size), 2 * vv->capacity));
+        vv = realloc(vv, FLEX_ARRAY_VEC_SIZE(vv->member_size, 2 * vv->capacity));
         ASSERT(vv != NULL);
         vv->capacity *= 2;
     }
@@ -192,3 +195,5 @@ vector_data(struct vector* vv)
 }
 
 #undef ASSERT
+
+#endif // VECTOR_C
