@@ -9,9 +9,10 @@
 int
 main(void)
 {
+    const int N = 0;
     for (int repetitions = 0; repetitions < REPEATS; repetitions++) {
-        struct i32_vector iv = create_i32_vector(LOOPS+1);
-        struct i32_vector iv2 = create_i32_vector(LOOPS+1);
+        struct i32_vector iv = create_i32_vector(N);
+        struct i32_vector iv2 = create_i32_vector(N);
 
         for (int ii = 0; ii < LOOPS; ii++) {
             iv = vec_push(iv, ii);
@@ -38,6 +39,7 @@ main(void)
         (void)vec_data(result)[LOOPS];
         destroy_i32_vector(iv);
         destroy_i32_vector(iv2);
+        destroy_i32_vector(result);
     /*    
     */
     }
