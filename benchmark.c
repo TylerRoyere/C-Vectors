@@ -14,7 +14,7 @@ main(void)
         //struct i32_vector iv = create_i32_vector(N);
         //struct i32_vector iv2 = create_i32_vector(N);
         vec_of(int32_t) iv = init_vec(iv, N);
-        struct i32_vector iv2 = create_vec(int32_t, N);
+        vec_of(int32_t) iv2 = create_vec(int32_t, N);
 
         for (int ii = 0; ii < LOOPS; ii++) {
             iv = vec_push(iv, ii);
@@ -32,7 +32,7 @@ main(void)
             iv2 = vec_push(iv2, vec_get(iv, ii, NULL));
         }
 
-        struct i32_vector result = create_i32_vector_cleared(size + 1);
+        vec_of(int32_t) result = create_vec_cleared(int32_t, size + 1);
 
         for (int ii = 0; ii < size; ii++) {
             vec_data(iv)[ii] = vec_data(iv2)[ii] + vec_data(iv)[ii];
