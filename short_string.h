@@ -2,15 +2,17 @@
 #define SHORT_STRING_H
 
 #define SHORT_STRING_SIZE 128
-#define STR_INDIR(x) #x 
-#define STR(x) STR_INDIR(x)
-#define SHORT_STRING_FORMAT "%."STR(SHORT_STRING_SIZE)"s"
+#define SHORT_STRING_SIZE_TO_FORMAT_INDIR(x) #x 
+#define SHORT_STRING_SIZE_TO_FORMAT(x) SHORT_STRING_SIZE_TO_FORMAT_INDIR(x)
+#define SHORT_STRING_FORMAT "%."SHORT_STRING_SIZE_TO_FORMAT(SHORT_STRING_SIZE)"s"
 
-struct short_string {
+struct short_string_ {
     char str[SHORT_STRING_SIZE];
 };
 
-struct short_string* short_string_create(const char* str);
-void short_string_print(struct short_string* ss);
+typedef struct short_string_ short_string;
+
+short_string short_string_create(const char* str);
+void short_string_print(const short_string* ss);
 
 #endif
