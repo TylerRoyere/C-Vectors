@@ -6,7 +6,7 @@
 int
 test_short_string(void)
 {
-    short_string ss = short_string_create("Hello world!");
+    short_string ss = short_string_create("Hello World!");
     printf("Text: "SHORT_STRING_FORMAT"\n", ss.str);
     printf("Text: ");
     short_string_print(&ss);
@@ -25,6 +25,22 @@ test_short_string(void)
     }
 
     destroy_vec(ssv);
+
+    vec_of(vec_of(int32_t)) ivv = init_vec(ivv, 0);
+    for (int ii = 0; ii < 4; ii++) {
+        vec_push(ivv, vec_fill_value(create_vec(int32_t, 0), ii));
+    }
+
+    vec_of(int32_t) temp;
+    vec_foreach_copy(ivv, temp) {
+        printf("%d\n", vec_get(temp, 0, NULL));
+    }
+
+    vec_foreach_pop(ivv, temp) {
+        printf("%d\n", vec_get(temp, 0, NULL));
+        destroy_vec(temp);
+    }
+    destroy_vec(ivv);
 }
 
 int
@@ -50,6 +66,7 @@ main(void)
     vec_pop(uv, NULL);
     vec_last(uv, NULL);
     vec_data(uv);
+    destroy_vec(uv);
 
     vec_of_ptr(void) ptr_vec;
     vec_of_ptr(char) str_vec;
