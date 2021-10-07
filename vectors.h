@@ -105,7 +105,7 @@ typedef unsigned char uchar;
 /* Gross hacks as an attempt to handle multi-keyword types */
 
 #define GENERATE_VECTOR_FOR_TYPE(V, T, copyable) \
-    GENERATE_VECTOR_FOR_TYPE_INDIR(V, T, copyable)
+    GENERATE_VECTOR_FOR_TYPE_INDIR(vec_of(V), T, copyable)
 
 #define GENERATE_VECTOR_FOR_TYPE_PTR(type, copyable) \
     GENERATE_VECTOR_STRUCTURE(vec_of(ptr_to(type))); \
@@ -120,23 +120,23 @@ typedef unsigned char uchar;
     GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(ptr_to(struct(type))), struct type*, copyable)
 
 /* Generate vectors for int types */
-GENERATE_VECTOR_FOR_TYPE(vec_of(uint64_t), uint64_t, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(int64_t), int64_t, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(uint32_t), uint32_t, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(int32_t), int32_t, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(uint16_t), uint16_t, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(int16_t), int16_t, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(uint8_t), uint8_t, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(int8_t), int8_t, true)
+GENERATE_VECTOR_FOR_TYPE(uint64_t, uint64_t, true)
+GENERATE_VECTOR_FOR_TYPE(int64_t, int64_t, true)
+GENERATE_VECTOR_FOR_TYPE(uint32_t, uint32_t, true)
+GENERATE_VECTOR_FOR_TYPE(int32_t, int32_t, true)
+GENERATE_VECTOR_FOR_TYPE(uint16_t, uint16_t, true)
+GENERATE_VECTOR_FOR_TYPE(int16_t, int16_t, true)
+GENERATE_VECTOR_FOR_TYPE(uint8_t, uint8_t, true)
+GENERATE_VECTOR_FOR_TYPE(int8_t, int8_t, true)
 
 /* Pointers are a bit tricky not sure I like this implementation */
-GENERATE_VECTOR_FOR_TYPE(vec_of(ptr_to(ptr_to(char))), char**, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(ptr_to(char)), char*, true)
+GENERATE_VECTOR_FOR_TYPE(ptr_to(ptr_to(char)), char**, true)
+GENERATE_VECTOR_FOR_TYPE(ptr_to(char), char*, true)
 GENERATE_VECTOR_FOR_TYPE_PTR(void, true)
 
 /* Generate vectors for other structures (including other vectors!) */
-GENERATE_VECTOR_FOR_TYPE(vec_of(short_string), short_string, true)
-GENERATE_VECTOR_FOR_TYPE(vec_of(i32v), i32v, true)
+GENERATE_VECTOR_FOR_TYPE(short_string, short_string, true)
+GENERATE_VECTOR_FOR_TYPE(i32v, i32v, true)
 
 #define VECTOR_GENERIC(pre, x, post) \
     x : pre##x##post \
