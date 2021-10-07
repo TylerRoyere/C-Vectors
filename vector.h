@@ -22,8 +22,8 @@ struct vector {
 
 static struct vector* create_vector(const int capacity, const int member_size);
 static struct vector* create_vector_cleared(const int capacity, const int member_size);
-static void vector_fill_value(struct vector* vv, void* fill);
-static void vector_fill(struct vector* vv);
+static struct vector* vector_fill_value(struct vector* vv, void* fill);
+static struct vector* vector_fill(struct vector* vv);
 static int destroy_vector(struct vector* vv);
 
 static int vector_size(struct vector* vv);
