@@ -6,16 +6,21 @@
 
 #include "helpers.h"
 
+#include "short_string.h"
+
 #define VEC_TYPE_uint64_t   u64_vector
 #define VEC_TYPE_int64_t    i64_vector
 #define VEC_TYPE_uint32_t   u32_vector
 #define VEC_TYPE_int32_t    i32_vector
 #define VEC_TYPE_void_ptr   str_vector
 #define VEC_TYPE_char_ptr   ptr_vector
+#define VEC_TYPE_short_string   ss_vector
 
 #define VEC_STRUCT_NAME(T) VEC_TYPE_##T
 #define vec_of(T) struct VEC_STRUCT_NAME(T)
 #define vec_of_ptr(T) vec_of(T##_ptr)
+#define vec_of_struct(T) vec_of(struct_##T)
+#define vec_of_struct_ptr(T) vec_of_ptr(struct_##T)
 
 #define GENERATE_VECTOR_FOR_TYPE(type, copyable) \
     GENERATE_VECTOR_STRUCTURE(VEC_STRUCT_NAME(type)); \
@@ -25,6 +30,13 @@
     GENERATE_VECTOR_STRUCTURE(VEC_STRUCT_NAME(type##_ptr)); \
     GENERATE_VECTOR_STATIC_FUNCTIONS(VEC_STRUCT_NAME(type##_ptr), type*, copyable)
 
+#define GENERATE_VECTOR_FOR_STRUCT_TYPE(type, copyable) \
+    GENERATE_VECTOR_STRUCTURE(VEC_STRUCT_NAME(struct_##type)); \
+    GENERATE_VECTOR_STATIC_FUNCTIONS(VEC_STRUCT_NAME(struct_##type), struct type, copyable)
+
+#define GENERATE_VECTOR_FOR_STRUCT_TYPE_PTR(type, copyable) \
+    GENERATE_VECTOR_STRUCTURE(VEC_STRUCT_NAME(struct_##type##_ptr)); \
+    GENERATE_VECTOR_STATIC_FUNCTIONS(VEC_STRUCT_NAME(struct_##type##_ptr), struct type*, copyable)
 
 GENERATE_VECTOR_FOR_TYPE(uint64_t, true)
 GENERATE_VECTOR_FOR_TYPE(int64_t, true)
@@ -33,6 +45,8 @@ GENERATE_VECTOR_FOR_TYPE(int32_t, true)
 
 GENERATE_VECTOR_FOR_TYPE_PTR(char, true)
 GENERATE_VECTOR_FOR_TYPE_PTR(void, true)
+
+GENERATE_VECTOR_FOR_TYPE(short_string, true)
 
 #define VECTOR_GENERIC_ASSOC(pre, x, post) \
     struct x : pre##x##post \
@@ -49,7 +63,8 @@ GENERATE_VECTOR_FOR_TYPE_PTR(void, true)
     VECTOR_GENERIC(op, u32_vector), \
     VECTOR_GENERIC(op, i32_vector), \
     VECTOR_GENERIC(op, str_vector), \
-    VECTOR_GENERIC(op, ptr_vector)
+    VECTOR_GENERIC(op, ptr_vector), \
+    VECTOR_GENERIC(op, ss_vector)
 
 #define VECTOR_MANAGERS(op, post) \
     VECTOR_MANAGER(op, u64_vector, post), \
@@ -57,7 +72,8 @@ GENERATE_VECTOR_FOR_TYPE_PTR(void, true)
     VECTOR_MANAGER(op, u32_vector, post), \
     VECTOR_MANAGER(op, i32_vector, post), \
     VECTOR_MANAGER(op, str_vector, post), \
-    VECTOR_MANAGER(op, ptr_vector, post)
+    VECTOR_MANAGER(op, ptr_vector, post), \
+    VECTOR_MANAGER(op, ss_vector, post)
 
 #define TYPE_TO_VECTORS(post) \
     TYPE_TO_VECTOR(uint64_t, u64_vector, post), \
@@ -65,7 +81,8 @@ GENERATE_VECTOR_FOR_TYPE_PTR(void, true)
     TYPE_TO_VECTOR(uint32_t, u32_vector, post), \
     TYPE_TO_VECTOR(int32_t, i32_vector, post), \
     TYPE_TO_VECTOR(char*, str_vector, post), \
-    TYPE_TO_VECTOR(void*, ptr_vector, post)
+    TYPE_TO_VECTOR(void*, ptr_vector, post), \
+    TYPE_TO_VECTOR(struct short_string*, ss_vector, post)
 
 #define create_vec(T, size) _Generic((*(T*)NULL), \
     TYPE_TO_VECTORS() \
