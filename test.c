@@ -20,7 +20,7 @@ test_short_string(void)
     vec_push(ssv, short_string_create("4. This is awesome"));
 
     for (int ii = 0; ii < vec_size(ssv); ii++) {
-        ss = vec_get(ssv, ii, NULL);
+        ss = vec_get(ssv, ii);
         printf(SHORT_STRING_FORMAT"\n", ss.str);
     }
 
@@ -33,19 +33,40 @@ test_short_string(void)
 
     vec_of(int32_t) temp;
     vec_foreach_copy(ivv, temp) {
-        printf("%d\n", vec_get(temp, 0, NULL));
+        printf("%d\n", vec_get(temp, 0));
     }
 
     vec_foreach_pop(ivv, temp) {
-        printf("%d\n", vec_get(temp, 0, NULL));
+        printf("%d\n", vec_get(temp, 0));
         destroy_vec(temp);
     }
     destroy_vec(ivv);
 }
 
 int
+test_declaration(void)
+{
+    vec_of(char) cv;
+    vec_of(uchar) ucv;
+    vec_of(short) sv;
+    vec_of(ushort) usv;
+    vec_of(int) iv;
+    vec_of(uint) uiv;
+    vec_of(long) lv;
+    vec_of(ulong) ulv;
+    vec_of(llong) llv;
+    vec_of(ullong) ullv;
+    vec_of(size_t) zv;
+    vec_of(ssize_t) szv;
+
+    vec_of(unsigned(long(long))) voull;
+    vec_of(ptr_to(ptr_to(char))) void_ptrv;
+}
+
+int
 main(void)
 {
+    int good;
     vec_of(uint64_t) uv;
     uv = create_vec(uint64_t, 0);
     destroy_vec(uv);
@@ -60,21 +81,27 @@ main(void)
     vec_resize(uv, 16);
     vec_fill(uv);
     vec_set(uv, 9, 10);
-    vec_get(uv, 9, NULL);
-    vec_get_ref(uv, 9, NULL);
+    vec_get(uv, 9);
+    vec_get_check(uv, 9, &good);
+    vec_get_ref(uv, 9);
+    vec_get_ref_check(uv, 9, &good);
     vec_push(uv, 12);
     vec_pop(uv, NULL);
     vec_last(uv, NULL);
     vec_data(uv);
     destroy_vec(uv);
 
-    vec_of_ptr(void) ptr_vec;
-    vec_of_ptr(char) str_vec;
+    vec_of(int) ivec;
+
+    vec_of(ptr_to(void)) ptr_vec;
+    vec_of(ptr_to(char)) str_vec;
 
     vec_of(int64_t) i64_vec;
     vec_of(uint64_t) u64_vec;
     vec_of(int32_t) i32_vec;
     vec_of(uint32_t) u32_vec;
+
+    unsigned int temp2;
 
     test_short_string();
     return 0;

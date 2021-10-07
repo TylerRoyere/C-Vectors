@@ -29,7 +29,7 @@ main(void)
 
         int size = vec_size(iv);
         for (int ii = 0; ii < size; ii++) {
-            iv2 = vec_push(iv2, vec_get(iv, ii, NULL));
+            iv2 = vec_push(iv2, vec_get(iv, ii));
         }
 
         vec_of(int32_t) result = create_vec_cleared(int32_t, size + 1);

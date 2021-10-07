@@ -63,20 +63,20 @@ static inline name name##_resize(name vv, const int new_capacity) \
         .vec = vector_resize(vv.vec, new_capacity), \
     }; \
 } \
-static inline type name##_get(const name vv, const int index, int* good) \
+static inline type name##_get(const name vv, const int index, int* err) \
 { \
     type ret; \
-    NULLABLE_ASSIGNMENT(int, good) = vector_get(vv.vec, index, &ret); \
+    NULLABLE_ASSIGNMENT(int, err) = vector_get(vv.vec, index, &ret); \
     return ret; \
 } \
 static inline int name##_set(name vv, const int index, type val) \
 { \
     return vector_set(vv.vec, index, &val); \
 } \
-static inline type* name##_get_ref(name vv, const int index, int* good) \
+static inline type* name##_get_ref(name vv, const int index, int* err) \
 { \
     type* ret = NULL; \
-    NULLABLE_ASSIGNMENT(int, good) = vector_get_ref(vv.vec, index, (void**)&ret); \
+    NULLABLE_ASSIGNMENT(int, err) = vector_get_ref(vv.vec, index, (void**)&ret); \
     return ret; \
 } \
 static inline name name##_push(name vv, type value) \
@@ -87,10 +87,10 @@ static inline name name##_pop(const name vv, type* ret) \
 { \
     return (name) { .vec = vector_pop(vv.vec, ret), };  \
 } \
-static inline type* name##_last(name vv, int* good) \
+static inline type* name##_last(name vv, int* err) \
 { \
     type* ret = NULL; \
-    NULLABLE_ASSIGNMENT(int, good) = vector_get_ref(vv.vec, vector_size(vv.vec)-1, (void**)&ret); \
+    NULLABLE_ASSIGNMENT(int, err) = vector_get_ref(vv.vec, vector_size(vv.vec)-1, (void**)&ret); \
     return ret; \
 } \
 static inline type* name##_data(name vv) \
@@ -141,20 +141,20 @@ name name##_resize(name vv, const int new_capacity) \
         .vec = vector_resize(vv.vec, new_capacity), \
     }; \
 } \
-type name##_get(const name vv, const int index, int* good) \
+type name##_get(const name vv, const int index, int* err) \
 { \
     type ret; \
-    NULLABLE_ASSIGNMENT(int, good) = vector_get(vv.vec, index, &ret); \
+    NULLABLE_ASSIGNMENT(int, err) = vector_get(vv.vec, index, &ret); \
     return ret; \
 } \
 int name##_set(name vv, const int index, type val) \
 { \
     return vector_set(vv.vec, index, &val); \
 } \
-type* name##_get_ref(name vv, const int index, int* good) \
+type* name##_get_ref(name vv, const int index, int* err) \
 { \
     type* ret = NULL; \
-    NULLABLE_ASSIGNMENT(int, good) = vector_get_ref(vv.vec, index, (void**)&ret); \
+    NULLABLE_ASSIGNMENT(int, err) = vector_get_ref(vv.vec, index, (void**)&ret); \
     return ret; \
 } \
 name name##_push(name vv, type value) \
@@ -165,10 +165,10 @@ name name##_pop(const name vv, type* ret) \
 { \
     return (name) { .vec = vector_pop(vv.vec, ret), };  \
 } \
- type* name##_last(name vv, int* good) \
+ type* name##_last(name vv, int* err) \
 { \
     type* ret = NULL; \
-    NULLABLE_ASSIGNMENT(int, good) = vector_get_ref(vv.vec, vector_size(vv.vec)-1, (void**)&ret); \
+    NULLABLE_ASSIGNMENT(int, err) = vector_get_ref(vv.vec, vector_size(vv.vec)-1, (void**)&ret); \
     return ret; \
 } \
 type* name##_data(name vv) \
@@ -189,12 +189,12 @@ name name##_fill_value(name vv, type fill); \
 int destroy_ ## name (name vv); \
 int name##_size(name vv); \
 name name##_resize(name vv, const int new_capacity); \
-type name##_get(const name vv, const int index, int* good); \
+type name##_get(const name vv, const int index, int* err); \
 int name##_set(name vv, const int index, type val); \
-type* name##_get_ref(name vv, const int index, int* good); \
+type* name##_get_ref(name vv, const int index, int* err); \
 name name##_push(name vv, type value); \
 name name##_pop(const name vv, type* ret); \
-type* name##_last(name vv, int* good); \
+type* name##_last(name vv, int* err); \
 type* name##_data(name vv) \
 
 
