@@ -78,22 +78,24 @@ create_vector_cleared(const int capacity, const int member_size)
     return result;
 }
 
-inline void
+inline struct vector* 
 vector_fill_value(struct vector* vv, void* fill)
 {
+    vv->size = vv->capacity;
     if (fill != NULL) {
-        for (int ii = 0; ii < vv->size; ii++) {
+        for (int ii = 0; ii < vv->capacity; ii++) {
             memcpy((char*)vv->data + (size_t)(ii << vv->member_size), fill,
                     (size_t)pow_of_2(vv->member_size));
         }
     }
-    vv->size = vv->capacity;
+    return vv;
 }
 
-inline void
+inline struct vector* 
 vector_fill(struct vector* vv)
 {
     vv->size = vv->capacity;
+    return vv;
 }
 
 inline int
