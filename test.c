@@ -6,11 +6,25 @@
 int
 test_short_string(void)
 {
-    struct short_string ss = short_string_create("Hello world!");
+    short_string ss = short_string_create("Hello world!");
     printf("Text: "SHORT_STRING_FORMAT"\n", ss.str);
     printf("Text: ");
     short_string_print(&ss);
     printf("\n");
+
+    vec_of(short_string) ssv = init_vec(ssv, 4);
+
+    vec_push(ssv, short_string_create("1. First I pushed this onto the vector"));
+    vec_push(ssv, short_string_create("2. Then I pushed this"));
+    vec_push(ssv, short_string_create("3. Finally I added this sentence"));
+    vec_push(ssv, short_string_create("4. This is awesome"));
+
+    for (int ii = 0; ii < vec_size(ssv); ii++) {
+        ss = vec_get(ssv, ii, NULL);
+        printf(SHORT_STRING_FORMAT"\n", ss.str);
+    }
+
+    destroy_vec(ssv);
 }
 
 int
