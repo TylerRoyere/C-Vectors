@@ -7,7 +7,7 @@
 #include "vector.h"
 #include "helpers.h"
 
-#ifdef NDEBUG
+#ifndef NDEBUG
 #define ASSERT(x) assert(x)
 #else
 #define ASSERT(x) 
@@ -16,7 +16,8 @@
 static inline int
 internal_ceil_log_2(int size)
 {
-    size >>= 1;
+    size--;
+    if (size <= 0) return 0;
     for (int result = 0; ; size >>= 4) {
         if ((size >> 0) == 0) return result;
         if ((size >> 1) == 0) return result + 1;
@@ -118,7 +119,9 @@ vector_resize(struct vector* vv, const int new_capacity)
 
     vv->data = realloc(vv->data, ((size_t)new_capacity) << (size_t)vv->member_size);
 
-    ASSERT(vv != NULL);
+    ASSERT(vv->data != NULL);
+
+    vv->capacity = new_capacity;
 
     return vv;
 }

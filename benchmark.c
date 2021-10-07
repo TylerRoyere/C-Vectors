@@ -11,8 +11,10 @@ main(void)
 {
     const int N = 0;
     for (int repetitions = 0; repetitions < REPEATS; repetitions++) {
-        struct i32_vector iv = create_i32_vector(N);
-        struct i32_vector iv2 = create_i32_vector(N);
+        //struct i32_vector iv = create_i32_vector(N);
+        //struct i32_vector iv2 = create_i32_vector(N);
+        vec_of(int32_t) iv = init_vec(iv, N);
+        struct i32_vector iv2 = create_vec(int32_t, N);
 
         for (int ii = 0; ii < LOOPS; ii++) {
             iv = vec_push(iv, ii);
@@ -25,7 +27,7 @@ main(void)
         }
 */
 
-        int size = i32_vector_size(iv);
+        int size = vec_size(iv);
         for (int ii = 0; ii < size; ii++) {
             iv2 = vec_push(iv2, vec_get(iv, ii, NULL));
         }
@@ -37,9 +39,9 @@ main(void)
         }
 
         (void)vec_data(result)[LOOPS];
-        destroy_i32_vector(iv);
-        destroy_i32_vector(iv2);
-        destroy_i32_vector(result);
+        destroy_vec(iv);
+        destroy_vec(iv2);
+        destroy_vec(result);
     /*    
     */
     }

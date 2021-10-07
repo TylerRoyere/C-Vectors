@@ -1,12 +1,22 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "vectors.h"
+#include "short_string.h"
+
+int
+test_short_string(void)
+{
+    struct short_string ss = short_string_create("Hello world!");
+    printf("Text: "SHORT_STRING_FORMAT"\n", ss.str);
+    printf("Text: ");
+    short_string_print(&ss);
+    printf("\n");
+}
 
 int
 main(void)
 {
-    struct u64_vector uv;
-    uint64_t* val;
+    vec_of(uint64_t) uv;
     uv = create_vec(uint64_t, 0);
     destroy_vec(uv);
     uv = init_vec(uv, 0);
@@ -27,5 +37,14 @@ main(void)
     vec_last(uv, NULL);
     vec_data(uv);
 
+    vec_of_ptr(void) ptr_vec;
+    vec_of_ptr(char) str_vec;
+
+    vec_of(int64_t) i64_vec;
+    vec_of(uint64_t) u64_vec;
+    vec_of(int32_t) i32_vec;
+    vec_of(uint32_t) u32_vec;
+
+    test_short_string();
     return 0;
 }
