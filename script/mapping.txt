@@ -1,0 +1,6 @@
+uint32_t, u32v
+int64_t, i64v
+char*, strv
+char * * , str_str_v
+struct char **, struct_str_str_v
+struct short_string *, short_str_v
