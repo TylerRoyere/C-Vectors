@@ -1,6 +1,13 @@
-uint32_t, u32v
+uint64_t, u64v
 int64_t, i64v
+uint32_t, u32v
+int32_t, i32v
+uint16_t, u16v
+int16_t, i16v
+uint8_t, u8v
+int8_t, i8v
 char*, strv
-char * * , str_str_v
-struct char **, struct_str_str_v
-struct short_string *, short_str_v
+void*, ptrv
+char**, char_ptr_ptrv
+short_string, short_str_v
+i32v, i32vv

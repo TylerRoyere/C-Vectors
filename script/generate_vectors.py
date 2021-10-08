@@ -17,13 +17,13 @@ def convert_structs(text):
         #print(struct, text[x:])
         if len(text[x:]) > len(struct) and struct in text[x:x+len(struct)]:
             print("Text left:", text[x:])
-            return "{}struct_of({})".format(text[:x], convert_structs(text[x+len(struct):]))
+            return "{}struct({})".format(text[:x], convert_structs(text[x+len(struct):]))
         x = x + 1
     return text.strip()
 
 def expand_type_wrappers(text):
     x = 0
-    struct_of = "struct_of"
+    struct_of = "struct"
     ptr_to = "ptr_to"
     text = text.rstrip(')')
     size = len(text)
@@ -38,7 +38,7 @@ def expand_type_wrappers(text):
     return text.strip()
     
 
-def read_mappings(file):
+def read_mappings(vec_file):
     vector_mappings = []
     with open(vec_file, "r") as infile:
         contents = infile.readlines()
@@ -54,33 +54,70 @@ def read_mappings(file):
 
     return vector_mappings
 
+def write_header(header_file, defines, generators, generics, conversions):
+    with open(header_file, "w") as outfile:
+        outfile.write(defines)
+        outfile.write("\n\n")
+        outfile.write(generators)
+        outfile.write("\n\n")
+        outfile.write(generics)
+        outfile.write("\n\n")
+        outfile.write(conversions)
+        outfile.write("\n\n")
+
+
 def generate_header_mappings(mappings):
     # first lets generate type defines
     defines = []
+    define_blob = ""
     vector_generators = []
+    vector_generator_blob = ""
     vector_generics = []
+    vector_generic_blob = "#define VECTOR_GENERICS(a, b) \\\n"
     type_to_vector_conversions = []
+    vector_conversion_blob = "#define TYPE_TO_VECTORS(post) \\\n"
     for mapping in mappings:
-        defines.append(f"#define VEC_TYPE_{mapping[3]}\t{mapping[1]}")
-        vector_generators.append(f"GENERATE_VECTOR_FOR_TYPE({mapping[3]}, {mapping[0]}, true)")
+        defines.append(f"#define VEC_TYPE_{mapping[3]} {mapping[1]}")
+        vector_generators.append(f"GENERATE_VECTOR_FOR_TYPE({mapping[2]}, {mapping[0]}, true)")
         vector_generics.append(f"VECTOR_GENERIC(a, {mapping[1]}, b)")
         type_to_vector_conversions.append(f"TYPE_TO_VECTOR({mapping[0]}, {mapping[1]}, post)")
 
     print("\nDefines:") 
     for define in defines:
+        define_blob += f"{define}\n"
         print(define)
 
     print("\nGenerators:") 
     for generator in vector_generators:
+        vector_generator_blob += f"{generator}\n"
         print(generator)
 
     print("\nGenerics:") 
-    for generic in vector_generics:
+    last = len(vector_generics) - 1
+    for ii, generic in enumerate(vector_generics):
+        if ii != last:
+            vector_generic_blob += f"    {generic}, \\\n"
+        else:
+            vector_generic_blob += f"    {generic}\n"
         print(generic)
 
     print("\nConversion:") 
-    for conversion in type_to_vector_conversions:
+    last = len(type_to_vector_conversions) - 1
+    for ii, conversion in enumerate(type_to_vector_conversions):
+        if ii != last:
+            vector_conversion_blob += f"    {conversion}, \\\n"
+        else:
+            vector_conversion_blob += f"    {conversion}\n"
         print(conversion)
+
+    print("")
+
+    print(define_blob)
+    print(vector_generator_blob)
+    print(vector_generic_blob)
+    print(vector_conversion_blob)
+
+    return define_blob, vector_generator_blob, vector_generic_blob, vector_conversion_blob
 
 
 if __name__ == "__main__":
@@ -116,7 +153,9 @@ if __name__ == "__main__":
     for mapping in vector_mappings:
         print(f"( {mapping[0]}, {mapping[2]}, {mapping[3]} ) -> {mapping[1]}")
     
-    generate_header_mappings(vector_mappings)
+    defines, generators, generics, conversions = generate_header_mappings(vector_mappings)
+
+    write_header(header_file, defines, generators, generics, conversions)
 
 
 
