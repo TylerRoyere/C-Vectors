@@ -1,3 +1,8 @@
+#ifndef TEST_H
+#define TEST_H
+
+
+/* Mappings from contained type to vector type */
 #define VEC_TYPE_uint64_t u64v
 #define VEC_TYPE_int64_t i64v
 #define VEC_TYPE_uint32_t u32v
@@ -13,6 +18,7 @@
 #define VEC_TYPE_i32v i32vv
 
 
+/* Generate wrappers for vector of contained type */
 GENERATE_VECTOR_FOR_TYPE(uint64_t, uint64_t, true)
 GENERATE_VECTOR_FOR_TYPE(int64_t, int64_t, true)
 GENERATE_VECTOR_FOR_TYPE(uint32_t, uint32_t, true)
@@ -28,6 +34,7 @@ GENERATE_VECTOR_FOR_TYPE(short_string, short_string, true)
 GENERATE_VECTOR_FOR_TYPE(i32v, i32v, true)
 
 
+/* Map vector types to that vectors implementation */
 #define VECTOR_GENERICS(a, b) \
     VECTOR_GENERIC(a, u64v, b), \
     VECTOR_GENERIC(a, i64v, b), \
@@ -44,6 +51,7 @@ GENERATE_VECTOR_FOR_TYPE(i32v, i32v, true)
     VECTOR_GENERIC(a, i32vv, b)
 
 
+/* Map contained types to vector creation function */
 #define TYPE_TO_VECTORS(post) \
     TYPE_TO_VECTOR(uint64_t, u64v, post), \
     TYPE_TO_VECTOR(int64_t, i64v, post), \
@@ -60,3 +68,4 @@ GENERATE_VECTOR_FOR_TYPE(i32v, i32v, true)
     TYPE_TO_VECTOR(i32v, i32vv, post)
 
 
+#endif /* TEST_H */
