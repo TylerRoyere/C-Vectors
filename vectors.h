@@ -74,22 +74,6 @@ typedef unsigned char uchar;
 #warning "No mapping for char to fixed width integer"
 #endif
 
-/* Mandatory type to vector mappings */
-
-#define VEC_TYPE_uint64_t       u64v
-#define VEC_TYPE_int64_t        i64v
-#define VEC_TYPE_uint32_t       u32v
-#define VEC_TYPE_int32_t        i32v
-#define VEC_TYPE_uint16_t       u16v
-#define VEC_TYPE_int16_t        i16v
-#define VEC_TYPE_uint8_t        u8v
-#define VEC_TYPE_int8_t         i8v
-#define VEC_TYPE_char_ptr       strv
-#define VEC_TYPE_void_ptr       ptrv
-#define VEC_TYPE_short_string   short_stringv
-#define VEC_TYPE_i32v i32vv
-#define VEC_TYPE_char_ptr_ptr char_ptr_ptrv
-
 #define SPECIFIED_TYPE_TO_VECTOR(T) VEC_TYPE_##T
 #define EXPAND_VECTOR_OF_CONCAT(a, T, b) a##T##b
 #define vec_of(T) SPECIFIED_TYPE_TO_VECTOR(T)
@@ -119,63 +103,12 @@ typedef unsigned char uchar;
     GENERATE_VECTOR_STRUCTURE(vec_of(ptr_to(struct(type))));\
     GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(ptr_to(struct(type))), struct type*, copyable)
 
-/* Generate vectors for int types */
-GENERATE_VECTOR_FOR_TYPE(uint64_t, uint64_t, true)
-GENERATE_VECTOR_FOR_TYPE(int64_t, int64_t, true)
-GENERATE_VECTOR_FOR_TYPE(uint32_t, uint32_t, true)
-GENERATE_VECTOR_FOR_TYPE(int32_t, int32_t, true)
-GENERATE_VECTOR_FOR_TYPE(uint16_t, uint16_t, true)
-GENERATE_VECTOR_FOR_TYPE(int16_t, int16_t, true)
-GENERATE_VECTOR_FOR_TYPE(uint8_t, uint8_t, true)
-GENERATE_VECTOR_FOR_TYPE(int8_t, int8_t, true)
-
-/* Pointers are a bit tricky not sure I like this implementation */
-GENERATE_VECTOR_FOR_TYPE(ptr_to(ptr_to(char)), char**, true)
-GENERATE_VECTOR_FOR_TYPE(ptr_to(char), char*, true)
-GENERATE_VECTOR_FOR_TYPE_PTR(void, true)
-
-/* Generate vectors for other structures (including other vectors!) */
-GENERATE_VECTOR_FOR_TYPE(short_string, short_string, true)
-GENERATE_VECTOR_FOR_TYPE(i32v, i32v, true)
-
 #define VECTOR_GENERIC(pre, x, post) \
     x : pre##x##post \
 
 #define TYPE_TO_VECTOR(T, vec, post) \
     T : create_##vec##post
       
-/* Association list from vector to operation */
-
-#define VECTOR_GENERICS(a, b) \
-    VECTOR_GENERIC(a, u64v, b), \
-    VECTOR_GENERIC(a, i64v, b), \
-    VECTOR_GENERIC(a, u32v, b), \
-    VECTOR_GENERIC(a, i32v, b), \
-    VECTOR_GENERIC(a, u16v, b), \
-    VECTOR_GENERIC(a, i16v, b), \
-    VECTOR_GENERIC(a, u8v, b), \
-    VECTOR_GENERIC(a, i8v, b), \
-    VECTOR_GENERIC(a, strv, b), \
-    VECTOR_GENERIC(a, ptrv, b), \
-    VECTOR_GENERIC(a, short_stringv, b), \
-    VECTOR_GENERIC(a, i32vv, b)
-
-/* Associate list from type to the vector that contains it */
-
-#define TYPE_TO_VECTORS(post) \
-    TYPE_TO_VECTOR(uint64_t, u64v, post), \
-    TYPE_TO_VECTOR(int64_t, i64v, post), \
-    TYPE_TO_VECTOR(uint32_t, u32v, post), \
-    TYPE_TO_VECTOR(int32_t, i32v, post), \
-    TYPE_TO_VECTOR(uint16_t, u16v, post), \
-    TYPE_TO_VECTOR(int16_t, i16v, post), \
-    TYPE_TO_VECTOR(uint8_t, u8v, post), \
-    TYPE_TO_VECTOR(int8_t, i8v, post), \
-    TYPE_TO_VECTOR(char*, strv, post), \
-    TYPE_TO_VECTOR(void*, ptrv, post), \
-    TYPE_TO_VECTOR(short_string*, short_stringv, post), \
-    TYPE_TO_VECTOR(i32v, i32vv, post)
-
 /* Generic macros (Where the fun begins) */
 
 #define create_vec(T, size) _Generic((*(T*)NULL), \
@@ -273,14 +206,7 @@ GENERATE_VECTOR_FOR_TYPE(i32v, i32v, true)
 #define vec_foreach_pop(V, value) \
         while (vec_size(V) && vec_pop(V, &value).vec)
 
-/*
-GENERATE_VECTOR_FUNCTION_PROTOTYPES(u64v, uint64_t, true);
-GENERATE_VECTOR_FUNCTION_PROTOTYPES(i64v, int64_t, true);
-GENERATE_VECTOR_FUNCTION_PROTOTYPES(u32v, uint32_t, true);
-GENERATE_VECTOR_FUNCTION_PROTOTYPES(i32v, int32_t, true);
-GENERATE_VECTOR_FUNCTION_PROTOTYPES(stringv, char*, true);
-GENERATE_VECTOR_FUNCTION_PROTOTYPES(genericv, void*, true);
-*/
+#include "./script/test.h"
 
 #undef GENERATE_VECTOR_STRUCTURE
 #undef GENERATE_VECTOR_FUNCTION_PROTOTYPES
