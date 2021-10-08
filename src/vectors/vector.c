@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <assert.h>
 #include "vector.h"
-#include "helpers.h"
+#include "vector_helpers.h"
 
 #ifndef NDEBUG
 #define ASSERT(x) assert(x)
@@ -13,7 +13,9 @@
 #define ASSERT(x) 
 #endif
 
-static inline int
+#define INLINE 
+
+INLINE int
 internal_ceil_log_2(int size)
 {
     size--;
@@ -30,7 +32,7 @@ internal_ceil_log_2(int size)
     return 0;
 }
 
-static inline int
+INLINE int
 pow_of_2(int power)
 {
     return 1 << power;
@@ -212,5 +214,6 @@ vector_data(struct vector* vv)
 }
 
 #undef ASSERT
+#undef INLINE
 
 #endif // VECTOR_C

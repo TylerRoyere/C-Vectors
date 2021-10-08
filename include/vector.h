@@ -11,6 +11,8 @@ struct auto_vector {
 
 #define DEFAULT_VECTOR_CAPACITY (8)
 
+#define INLINE
+
 struct vector;
 
 struct vector {
@@ -20,24 +22,24 @@ struct vector {
     void *data;
 };
 
-static struct vector* create_vector(const int capacity, const int member_size);
-static struct vector* create_vector_cleared(const int capacity, const int member_size);
-static struct vector* vector_fill_value(struct vector* vv, void* fill);
-static struct vector* vector_fill(struct vector* vv);
-static int destroy_vector(struct vector* vv);
+INLINE struct vector* create_vector(const int capacity, const int member_size);
+INLINE struct vector* create_vector_cleared(const int capacity, const int member_size);
+INLINE struct vector* vector_fill_value(struct vector* vv, void* fill);
+INLINE struct vector* vector_fill(struct vector* vv);
+INLINE int destroy_vector(struct vector* vv);
 
-static int vector_size(struct vector* vv);
-static struct vector* vector_resize(struct vector* vv, const int new_capacity);
+INLINE int vector_size(struct vector* vv);
+INLINE struct vector* vector_resize(struct vector* vv, const int new_capacity);
 
-static int vector_get(struct vector* vv, const int index, void* ret);
-static int vector_set(struct vector* vv, const int index, const void* val);
-static int vector_get_ref(struct vector* vv, const int index, void** ret);
+INLINE int vector_get(struct vector* vv, const int index, void* ret);
+INLINE int vector_set(struct vector* vv, const int index, const void* val);
+INLINE int vector_get_ref(struct vector* vv, const int index, void** ret);
 
-static struct vector* vector_push(struct vector* vv, void* data);
-static struct vector* vector_pop(struct vector* vv, void* ret);
-static int vector_last(struct vector* vv, void** ret);
+INLINE struct vector* vector_push(struct vector* vv, void* data);
+INLINE struct vector* vector_pop(struct vector* vv, void* ret);
+INLINE int vector_last(struct vector* vv, void** ret);
 
-static void* vector_data(struct vector* vv);
+INLINE void* vector_data(struct vector* vv);
 
 
 #endif
