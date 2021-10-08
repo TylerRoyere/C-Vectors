@@ -1,7 +1,7 @@
 #include <stddef.h>
 
 #include "i32_vector.h"
-#include "helpers.h"
+#include "vector_helpers.h"
 
 struct i32_vector
 create_i32_vector(const int capacity)

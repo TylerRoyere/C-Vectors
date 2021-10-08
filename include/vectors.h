@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <limits.h>
 
-#include "helpers.h"
+#include "vector_helpers.h"
 
 #include "short_string.h"
 
@@ -76,32 +76,51 @@ typedef unsigned char uchar;
 
 #define SPECIFIED_TYPE_TO_VECTOR(T) VEC_TYPE_##T
 #define EXPAND_VECTOR_OF_CONCAT(a, T, b) a##T##b
+
+#ifndef VEC_OF_WITHOUT_TYPEOF
+#define vec_of_INDIR(T) __typeof__(T)
+#define vec_of(T) vec_of_INDIR(create_vec(T, 0))
+#else
 #define vec_of(T) SPECIFIED_TYPE_TO_VECTOR(T)
 #define ptr_to(T) EXPAND_VECTOR_OF_CONCAT(,T,_ptr)
 #define struct(T) EXPAND_VECTOR_OF_CONCAT(struct_,T,)
 #define unsigned(T) EXPAND_VECTOR_OF_CONCAT(u,T,)
 #define long(T) EXPAND_VECTOR_OF_CONCAT(l,T,)
+#endif
 
-#define GENERATE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
+#ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
+#define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
+    GENERATE_VECTOR_STRUCTURE(V); \
+    GENERATE_VECTOR_FUNCTION_PROTOTYPES(V, T, copyable);
+#else
+#define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
     GENERATE_VECTOR_STRUCTURE(V); \
     GENERATE_VECTOR_STATIC_FUNCTIONS(V, T, copyable)
+#endif
+
+#ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
+#define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable) \
+    GENERATE_VECTOR_FUNCTIONS(V, T, copyable)
+#else
+#define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable)
+#endif
 
 /* Gross hacks as an attempt to handle multi-keyword types */
 
-#define GENERATE_VECTOR_FOR_TYPE(V, T, copyable) \
-    GENERATE_VECTOR_FOR_TYPE_INDIR(vec_of(V), T, copyable)
+#define DECLARE_VECTOR_FOR_TYPE(V, T, copyable) \
+    DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable)
 
-#define GENERATE_VECTOR_FOR_TYPE_PTR(type, copyable) \
-    GENERATE_VECTOR_STRUCTURE(vec_of(ptr_to(type))); \
-    GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(ptr_to(type)), type*, copyable)
+#define DECLARE_VECTOR_FOR_TYPE_PTR(type, copyable) \
+    GENERATE_VECTOR_STRUCTURE(type); \
+    GENERATE_VECTOR_STATIC_FUNCTIONS(type, type*, copyable)
 
-#define GENERATE_VECTOR_FOR_STRUCT_TYPE(type, copyable) \
-    GENERATE_VECTOR_STRUCTURE(vec_of(struct(type))); \
-    GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(struct(type)), struct type, copyable)
+#define DECLARE_VECTOR_FOR_STRUCT_TYPE(type, copyable) \
+    GENERATE_VECTOR_STRUCTURE(type); \
+    GENERATE_VECTOR_STATIC_FUNCTIONS(type, struct type, copyable)
 
-#define GENERATE_VECTOR_FOR_STRUCT_TYPE_PTR(type, copyable) \
-    GENERATE_VECTOR_STRUCTURE(vec_of(ptr_to(struct(type))));\
-    GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(ptr_to(struct(type))), struct type*, copyable)
+#define DECLARE_VECTOR_FOR_STRUCT_TYPE_PTR(type, copyable) \
+    GENERATE_VECTOR_STRUCTURE(type);\
+    GENERATE_VECTOR_STATIC_FUNCTIONS(type, struct type*, copyable)
 
 #define VECTOR_GENERIC(pre, x, post) \
     x : pre##x##post \
@@ -206,15 +225,15 @@ typedef unsigned char uchar;
 #define vec_foreach_pop(V, value) \
         while (vec_size(V) && vec_pop(V, &value).vec)
 
-#include "./script/test.h"
+#include "vector_autogen.h"
 
 #undef GENERATE_VECTOR_STRUCTURE
 #undef GENERATE_VECTOR_FUNCTION_PROTOTYPES
-#undef GENERATE_VECTOR_FOR_TYPE
-#undef GENERATE_VECTOR_FOR_TYPE_PTR
-#undef GENERATE_VECTOR_FOR_STRUCT_TYPE
-#undef GENERATE_VECTOR_FOR_STRUCT_TYPE_PTR
+#undef DECLARE_VECTOR_FOR_TYPE
+#undef DECLARE_VECTOR_FOR_TYPE_PTR
+#undef DECLARE_VECTOR_FOR_STRUCT_TYPE
+#undef DECLARE_VECTOR_FOR_STRUCT_TYPE_PTR
 
-#include "vector.c"
+//#include "vector.c"
 
 #endif

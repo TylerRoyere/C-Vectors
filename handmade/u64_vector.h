@@ -3,7 +3,7 @@
 
 #include <stdint.h>
 
-#include "helpers.h"
+#include "vector_helpers.h"
 
 GENERATE_VECTOR_STRUCTURE(u64_vector);
 
