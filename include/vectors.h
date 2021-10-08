@@ -76,11 +76,17 @@ typedef unsigned char uchar;
 
 #define SPECIFIED_TYPE_TO_VECTOR(T) VEC_TYPE_##T
 #define EXPAND_VECTOR_OF_CONCAT(a, T, b) a##T##b
+
+#ifndef VEC_OF_WITHOUT_TYPEOF
+#define vec_of_INDIR(T) __typeof__(T)
+#define vec_of(T) vec_of_INDIR(create_vec(T, 0))
+#else
 #define vec_of(T) SPECIFIED_TYPE_TO_VECTOR(T)
 #define ptr_to(T) EXPAND_VECTOR_OF_CONCAT(,T,_ptr)
 #define struct(T) EXPAND_VECTOR_OF_CONCAT(struct_,T,)
 #define unsigned(T) EXPAND_VECTOR_OF_CONCAT(u,T,)
 #define long(T) EXPAND_VECTOR_OF_CONCAT(l,T,)
+#endif
 
 #ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
 #define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
@@ -94,7 +100,7 @@ typedef unsigned char uchar;
 
 #ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
 #define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable) \
-    GENERATE_VECTOR_FUNCTIONS(vec_of(V), T, copyable)
+    GENERATE_VECTOR_FUNCTIONS(V, T, copyable)
 #else
 #define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable)
 #endif
@@ -102,19 +108,19 @@ typedef unsigned char uchar;
 /* Gross hacks as an attempt to handle multi-keyword types */
 
 #define DECLARE_VECTOR_FOR_TYPE(V, T, copyable) \
-    DECLARE_VECTOR_FOR_TYPE_INDIR(vec_of(V), T, copyable)
+    DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable)
 
 #define DECLARE_VECTOR_FOR_TYPE_PTR(type, copyable) \
-    GENERATE_VECTOR_STRUCTURE(vec_of(ptr_to(type))); \
-    GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(ptr_to(type)), type*, copyable)
+    GENERATE_VECTOR_STRUCTURE(type); \
+    GENERATE_VECTOR_STATIC_FUNCTIONS(type, type*, copyable)
 
 #define DECLARE_VECTOR_FOR_STRUCT_TYPE(type, copyable) \
-    GENERATE_VECTOR_STRUCTURE(vec_of(struct(type))); \
-    GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(struct(type)), struct type, copyable)
+    GENERATE_VECTOR_STRUCTURE(type); \
+    GENERATE_VECTOR_STATIC_FUNCTIONS(type, struct type, copyable)
 
 #define DECLARE_VECTOR_FOR_STRUCT_TYPE_PTR(type, copyable) \
-    GENERATE_VECTOR_STRUCTURE(vec_of(ptr_to(struct(type))));\
-    GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(ptr_to(struct(type))), struct type*, copyable)
+    GENERATE_VECTOR_STRUCTURE(type);\
+    GENERATE_VECTOR_STATIC_FUNCTIONS(type, struct type*, copyable)
 
 #define VECTOR_GENERIC(pre, x, post) \
     x : pre##x##post \
