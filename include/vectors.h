@@ -5,7 +5,7 @@
 #include <stddef.h>
 #include <limits.h>
 
-#include "helpers.h"
+#include "vector_helpers.h"
 
 #include "short_string.h"
 
@@ -206,7 +206,7 @@ typedef unsigned char uchar;
 #define vec_foreach_pop(V, value) \
         while (vec_size(V) && vec_pop(V, &value).vec)
 
-#include "./script/test.h"
+#include "vector_autogen.h"
 
 #undef GENERATE_VECTOR_STRUCTURE
 #undef GENERATE_VECTOR_FUNCTION_PROTOTYPES
@@ -215,6 +215,6 @@ typedef unsigned char uchar;
 #undef GENERATE_VECTOR_FOR_STRUCT_TYPE
 #undef GENERATE_VECTOR_FOR_STRUCT_TYPE_PTR
 
-#include "vector.c"
+//#include "vector.c"
 
 #endif
