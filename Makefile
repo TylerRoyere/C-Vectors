@@ -22,14 +22,20 @@ benchmark: $(BENCHMARK_OBJS)
 test: $(TEST_OBJS)
 	$(CC) tests/test.c -o $@ $^ $(CFLAGS) $(INCLUDES)
 
-$(OBJ_DIR)/%.o: %.c %.h
+benchmark_cpp:
+	g++ tests/benchmark.cpp -o benchmark_cpp $(CFLAGS)
+
+$(OBJ_DIR)/%.o: %.c %.h | $(OBJ_DIR)
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDES)
 
-$(OBJ_DIR)/%.o: %.c
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDES)
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
 
 generate_vectors: 
 	python3 ./script/generate_vectors.py ./script/mapping.txt ./include/vector_autogen.h
 
 clean:
-	rm $(OBJ_DIR)/* test benchmark
+	rm $(OBJ_DIR)/* test benchmark benchmark_cpp
