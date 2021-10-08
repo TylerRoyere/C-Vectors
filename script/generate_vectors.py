@@ -1,23 +1,17 @@
 import sys
 import os
 
-def convert_pointers(text):
-    x = len(text)-1
-    while x >= 0:
-        if text[x] == '*':
-            return "ptr_to({})".format(convert_pointers(text[0:x]))
-        x = x - 1
-    return text.strip()
-
-def convert_structs(text):
-    struct = "struct"
-    x = 0
-    size = len(text)
-    while x < size:
-        if len(text[x:]) > len(struct) and struct in text[x:x+len(struct)]:
-            return "{}struct({})".format(text[:x], convert_structs(text[x+len(struct):]))
-        x = x + 1
-    return text.strip()
+def convert_names(text):
+    words = text.split(" ")
+    result = ""
+    for word in words:
+        if "*" == word:
+            result += "ptr"
+        else:
+            result += f"{word}_"
+    result = result.replace("*", "_ptr").rstrip("_")
+    print("Text:", text, "Result:", result)
+    return result
 
 def expand_type_wrappers(text):
     x = 0
@@ -58,7 +52,7 @@ def write_header(header_file, defines, generators, generics, conversions):
         outfile.write(f"#define {guard}\n")
         outfile.write("\n\n")
         outfile.write(f"/* Mappings from contained type to vector type */\n")
-        outfile.write(defines)
+        #outfile.write(defines)
         outfile.write("\n\n")
         outfile.write(f"/* Generate wrappers for vector of contained type */\n")
         outfile.write(generators)
@@ -90,8 +84,8 @@ def generate_header_mappings(mappings):
     vector_conversion_blob = "#define TYPE_TO_VECTORS(post) \\\n"
     for mapping in mappings:
         defines.append(f"#define VEC_TYPE_{mapping[3]} {mapping[1]}")
-        vector_generators.append(f"DECLARE_VECTOR_FOR_TYPE({mapping[2]}, {mapping[0]}, true)")
-        vector_implementations.append(f"GENERATE_VECTOR_FUNCTION_DEFINITIONS({mapping[2]}, {mapping[0]}, true)")
+        vector_generators.append(f"DECLARE_VECTOR_FOR_TYPE({mapping[1]}, {mapping[0]}, true)")
+        vector_implementations.append(f"GENERATE_VECTOR_FUNCTION_DEFINITIONS({mapping[1]}, {mapping[0]}, true)")
         vector_generics.append(f"VECTOR_GENERIC(a, {mapping[1]}, b)")
         type_to_vector_conversions.append(f"TYPE_TO_VECTOR({mapping[0]}, {mapping[1]}, post)")
 
@@ -150,29 +144,9 @@ if __name__ == "__main__":
     source_file = sys.argv[3]
     vector_mappings = read_mappings(vec_file)
 
-#    for mapping in vector_mappings:
-#        print(mapping[0], "->", mapping[1])
-
-#    print("Converting pointers")
     for mapping in vector_mappings:
-        mapping.append(convert_pointers(mapping[0]))
-
-#    for mapping in vector_mappings:
-#        print(mapping[0], "->", mapping[1])
-
-#    print("Converting structures")
-    for mapping in vector_mappings:
-        mapping[2] = convert_structs(mapping[2])
-
-#    for mapping in vector_mappings:
-#        print(f"({mapping[0]}, {mapping[2]}) -> {mapping[1]}")
-
-#    print("Unwrapping")
-    for mapping in vector_mappings:
-       mapping.append(expand_type_wrappers(mapping[2]))
-
-#    for mapping in vector_mappings:
-#        print(f"( {mapping[0]}, {mapping[2]}, {mapping[3]} ) -> {mapping[1]}")
+        mapping.append(convert_names(mapping[0]))
+        mapping.append(convert_names(mapping[0]))
     
     defines, generators, generics, conversions, impls = generate_header_mappings(vector_mappings)
 
