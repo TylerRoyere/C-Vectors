@@ -3,6 +3,9 @@ benchmark
 benchmark_cpp
 test
 
+# Auto generated files
+vector_autogen.*
+
 # Prerequisites
 *.d
 
