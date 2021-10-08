@@ -37,8 +37,11 @@ $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR)
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-./src/vectors/vector_autogen.c: generate_vectors
-./include/vector_autogen.h: generate_vectors
+./src/vectors/vector_autogen.c: ./script/mapping.txt
+	make generate_vectors
+
+./include/vector_autogen.h: ./script/mapping.txt
+	make generate_vectors
 
 generate_vectors: ./script/mapping.txt
 	python3 ./script/generate_vectors.py \
