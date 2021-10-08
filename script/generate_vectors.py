@@ -71,6 +71,10 @@ def write_header(header_file, defines, generators, generics, conversions):
         outfile.write("\n\n")
         outfile.write(f"#endif /* {guard} */")
 
+def write_source(source_file, impls):
+    with open(source_file, "w") as outfile:
+        outfile.write(f"#include \"vectors.h\"\n\n")
+        outfile.write(f"{impls}")
 
 def generate_header_mappings(mappings):
     # first lets generate type defines
@@ -78,13 +82,16 @@ def generate_header_mappings(mappings):
     define_blob = ""
     vector_generators = []
     vector_generator_blob = ""
+    vector_implementations = []
+    vector_implementation_blob = ""
     vector_generics = []
     vector_generic_blob = "#define VECTOR_GENERICS(a, b) \\\n"
     type_to_vector_conversions = []
     vector_conversion_blob = "#define TYPE_TO_VECTORS(post) \\\n"
     for mapping in mappings:
         defines.append(f"#define VEC_TYPE_{mapping[3]} {mapping[1]}")
-        vector_generators.append(f"GENERATE_VECTOR_FOR_TYPE({mapping[2]}, {mapping[0]}, true)")
+        vector_generators.append(f"DECLARE_VECTOR_FOR_TYPE({mapping[2]}, {mapping[0]}, true)")
+        vector_implementations.append(f"GENERATE_VECTOR_FUNCTION_DEFINITIONS({mapping[2]}, {mapping[0]}, true)")
         vector_generics.append(f"VECTOR_GENERIC(a, {mapping[1]}, b)")
         type_to_vector_conversions.append(f"TYPE_TO_VECTOR({mapping[0]}, {mapping[1]}, post)")
 
@@ -97,6 +104,9 @@ def generate_header_mappings(mappings):
     for generator in vector_generators:
         vector_generator_blob += f"{generator}\n"
 #        print(generator)
+    
+    for implementation in vector_implementations:
+        vector_implementation_blob += f"{implementation}\n"
 
 #    print("\nGenerics:") 
     last = len(vector_generics) - 1
@@ -123,16 +133,21 @@ def generate_header_mappings(mappings):
     print(vector_generic_blob)
     print(vector_conversion_blob)
 
-    return define_blob, vector_generator_blob, vector_generic_blob, vector_conversion_blob
+    return define_blob, \
+        vector_generator_blob,\
+        vector_generic_blob,\
+        vector_conversion_blob, \
+        vector_implementation_blob
 
 
 if __name__ == "__main__":
-    if len(sys.argv) < 3:
-        print("Usage:", sys.argv[0], "[vector_file] [header_file]")
+    if len(sys.argv) != 4:
+        print("Usage:", sys.argv[0], "[vector_file] [header_file] [source_file]")
         sys.exit(1)
 
     vec_file = sys.argv[1]
     header_file = sys.argv[2]
+    source_file = sys.argv[3]
     vector_mappings = read_mappings(vec_file)
 
 #    for mapping in vector_mappings:
@@ -159,9 +174,10 @@ if __name__ == "__main__":
 #    for mapping in vector_mappings:
 #        print(f"( {mapping[0]}, {mapping[2]}, {mapping[3]} ) -> {mapping[1]}")
     
-    defines, generators, generics, conversions = generate_header_mappings(vector_mappings)
+    defines, generators, generics, conversions, impls = generate_header_mappings(vector_mappings)
 
     write_header(header_file, defines, generators, generics, conversions)
+    write_source(source_file, impls)
 
 
 

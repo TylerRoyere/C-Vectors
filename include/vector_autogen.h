@@ -19,19 +19,19 @@
 
 
 /* Generate wrappers for vector of contained type */
-GENERATE_VECTOR_FOR_TYPE(uint64_t, uint64_t, true)
-GENERATE_VECTOR_FOR_TYPE(int64_t, int64_t, true)
-GENERATE_VECTOR_FOR_TYPE(uint32_t, uint32_t, true)
-GENERATE_VECTOR_FOR_TYPE(int32_t, int32_t, true)
-GENERATE_VECTOR_FOR_TYPE(uint16_t, uint16_t, true)
-GENERATE_VECTOR_FOR_TYPE(int16_t, int16_t, true)
-GENERATE_VECTOR_FOR_TYPE(uint8_t, uint8_t, true)
-GENERATE_VECTOR_FOR_TYPE(int8_t, int8_t, true)
-GENERATE_VECTOR_FOR_TYPE(ptr_to(char), char*, true)
-GENERATE_VECTOR_FOR_TYPE(ptr_to(void), void*, true)
-GENERATE_VECTOR_FOR_TYPE(ptr_to(ptr_to(char)), char**, true)
-GENERATE_VECTOR_FOR_TYPE(short_string, short_string, true)
-GENERATE_VECTOR_FOR_TYPE(i32v, i32v, true)
+DECLARE_VECTOR_FOR_TYPE(uint64_t, uint64_t, true)
+DECLARE_VECTOR_FOR_TYPE(int64_t, int64_t, true)
+DECLARE_VECTOR_FOR_TYPE(uint32_t, uint32_t, true)
+DECLARE_VECTOR_FOR_TYPE(int32_t, int32_t, true)
+DECLARE_VECTOR_FOR_TYPE(uint16_t, uint16_t, true)
+DECLARE_VECTOR_FOR_TYPE(int16_t, int16_t, true)
+DECLARE_VECTOR_FOR_TYPE(uint8_t, uint8_t, true)
+DECLARE_VECTOR_FOR_TYPE(int8_t, int8_t, true)
+DECLARE_VECTOR_FOR_TYPE(ptr_to(char), char*, true)
+DECLARE_VECTOR_FOR_TYPE(ptr_to(void), void*, true)
+DECLARE_VECTOR_FOR_TYPE(ptr_to(ptr_to(char)), char**, true)
+DECLARE_VECTOR_FOR_TYPE(short_string, short_string, true)
+DECLARE_VECTOR_FOR_TYPE(i32v, i32v, true)
 
 
 /* Map vector types to that vectors implementation */

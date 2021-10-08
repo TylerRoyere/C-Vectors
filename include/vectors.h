@@ -82,24 +82,37 @@ typedef unsigned char uchar;
 #define unsigned(T) EXPAND_VECTOR_OF_CONCAT(u,T,)
 #define long(T) EXPAND_VECTOR_OF_CONCAT(l,T,)
 
-#define GENERATE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
+#ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
+#define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
+    GENERATE_VECTOR_STRUCTURE(V); \
+    GENERATE_VECTOR_FUNCTION_PROTOTYPES(V, T, copyable);
+#else
+#define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
     GENERATE_VECTOR_STRUCTURE(V); \
     GENERATE_VECTOR_STATIC_FUNCTIONS(V, T, copyable)
+#endif
+
+#ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
+#define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable) \
+    GENERATE_VECTOR_FUNCTIONS(vec_of(V), T, copyable)
+#else
+#define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable)
+#endif
 
 /* Gross hacks as an attempt to handle multi-keyword types */
 
-#define GENERATE_VECTOR_FOR_TYPE(V, T, copyable) \
-    GENERATE_VECTOR_FOR_TYPE_INDIR(vec_of(V), T, copyable)
+#define DECLARE_VECTOR_FOR_TYPE(V, T, copyable) \
+    DECLARE_VECTOR_FOR_TYPE_INDIR(vec_of(V), T, copyable)
 
-#define GENERATE_VECTOR_FOR_TYPE_PTR(type, copyable) \
+#define DECLARE_VECTOR_FOR_TYPE_PTR(type, copyable) \
     GENERATE_VECTOR_STRUCTURE(vec_of(ptr_to(type))); \
     GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(ptr_to(type)), type*, copyable)
 
-#define GENERATE_VECTOR_FOR_STRUCT_TYPE(type, copyable) \
+#define DECLARE_VECTOR_FOR_STRUCT_TYPE(type, copyable) \
     GENERATE_VECTOR_STRUCTURE(vec_of(struct(type))); \
     GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(struct(type)), struct type, copyable)
 
-#define GENERATE_VECTOR_FOR_STRUCT_TYPE_PTR(type, copyable) \
+#define DECLARE_VECTOR_FOR_STRUCT_TYPE_PTR(type, copyable) \
     GENERATE_VECTOR_STRUCTURE(vec_of(ptr_to(struct(type))));\
     GENERATE_VECTOR_STATIC_FUNCTIONS(vec_of(ptr_to(struct(type))), struct type*, copyable)
 
@@ -210,10 +223,10 @@ typedef unsigned char uchar;
 
 #undef GENERATE_VECTOR_STRUCTURE
 #undef GENERATE_VECTOR_FUNCTION_PROTOTYPES
-#undef GENERATE_VECTOR_FOR_TYPE
-#undef GENERATE_VECTOR_FOR_TYPE_PTR
-#undef GENERATE_VECTOR_FOR_STRUCT_TYPE
-#undef GENERATE_VECTOR_FOR_STRUCT_TYPE_PTR
+#undef DECLARE_VECTOR_FOR_TYPE
+#undef DECLARE_VECTOR_FOR_TYPE_PTR
+#undef DECLARE_VECTOR_FOR_STRUCT_TYPE
+#undef DECLARE_VECTOR_FOR_STRUCT_TYPE_PTR
 
 //#include "vector.c"
 
