@@ -47,20 +47,20 @@ int
 test_declaration(void)
 {
     vec_of(char) cv;
-    vec_of(uchar) ucv;
+    vec_of(unsigned char) ucv;
     vec_of(short) sv;
-    vec_of(ushort) usv;
+    vec_of(unsigned short) usv;
     vec_of(int) iv;
-    vec_of(uint) uiv;
+    vec_of(unsigned int) uiv;
     vec_of(long) lv;
-    vec_of(ulong) ulv;
-    vec_of(llong) llv;
-    vec_of(ullong) ullv;
+    vec_of(unsigned long) ulv;
+    vec_of(long long) llv;
+    vec_of(unsigned long long) ullv;
     vec_of(size_t) zv;
     vec_of(ssize_t) szv;
 
-    vec_of(unsigned(long(long))) voull;
-    vec_of(ptr_to(ptr_to(char))) void_ptrv;
+    vec_of(unsigned long long) voull;
+    vec_of(char**) void_ptrv;
 }
 
 int
@@ -93,8 +93,8 @@ main(void)
 
     vec_of(int) ivec;
 
-    vec_of(ptr_to(void)) ptr_vec;
-    vec_of(ptr_to(char)) str_vec;
+    vec_of(void*) ptr_vec;
+    vec_of(char*) str_vec;
 
     vec_of(int64_t) i64_vec;
     vec_of(uint64_t) u64_vec;
