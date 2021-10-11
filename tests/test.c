@@ -3,6 +3,9 @@
 #include "vectors.h"
 #include "short_string.h"
 
+#define UNUSED __attribute__((unused))
+
+
 int
 test_short_string(void)
 {
@@ -41,26 +44,27 @@ test_short_string(void)
         destroy_vec(temp);
     }
     destroy_vec(ivv);
+
+    return 1;
 }
 
-int
+void
 test_declaration(void)
 {
-    vec_of(char) cv;
-    vec_of(unsigned char) ucv;
-    vec_of(short) sv;
-    vec_of(unsigned short) usv;
-    vec_of(int) iv;
-    vec_of(unsigned int) uiv;
-    vec_of(long) lv;
-    vec_of(unsigned long) ulv;
-    vec_of(long long) llv;
-    vec_of(unsigned long long) ullv;
-    vec_of(size_t) zv;
-    vec_of(ssize_t) szv;
-
-    vec_of(unsigned long long) voull;
-    vec_of(char**) void_ptrv;
+UNUSED    vec_of(char) cv;
+UNUSED    vec_of(unsigned char) ucv;
+UNUSED    vec_of(short) sv;
+UNUSED    vec_of(unsigned short) usv;
+UNUSED    vec_of(int) iv;
+UNUSED    vec_of(unsigned int) uiv;
+UNUSED    vec_of(long) lv;
+UNUSED    vec_of(unsigned long) ulv;
+UNUSED    vec_of(long long) llv;
+UNUSED    vec_of(unsigned long long) ullv;
+UNUSED    vec_of(size_t) zv;
+UNUSED    vec_of(ssize_t) szv;
+UNUSED    vec_of(unsigned long long) voull;
+UNUSED    vec_of(char**) void_ptrv;
 }
 
 int
@@ -91,17 +95,6 @@ main(void)
     vec_data(uv);
     destroy_vec(uv);
 
-    vec_of(int) ivec;
-
-    vec_of(void*) ptr_vec;
-    vec_of(char*) str_vec;
-
-    vec_of(int64_t) i64_vec;
-    vec_of(uint64_t) u64_vec;
-    vec_of(int32_t) i32_vec;
-    vec_of(uint32_t) u32_vec;
-
-    unsigned int temp2;
 
     test_short_string();
     return 0;
