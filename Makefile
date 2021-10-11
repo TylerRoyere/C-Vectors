@@ -5,6 +5,7 @@ USR_DEFS += #-DGENERATE_VECTOR_FUNCTIONS_INLINE
 CFLAGS := -Wpedantic -Wall -Wextra -fno-common -Wconversion -flto -O3 $(USR_DEFS)
 CC := gcc
 OBJ_DIR := objs
+TARGETS := benchmark test benchmark_cpp
 
 
 VPATH = tests:src/vectors:src/short_string
@@ -18,6 +19,8 @@ BENCHMARK_SRCS := src/vectors/vector.c src/vectors/vector_autogen.c
 BENCHMARK_OBJS := $(call src_to_objs, $(BENCHMARK_SRCS), $(OBJ_DIR))
 
 .PHONY: clean generate_vectors
+
+all: $(TARGETS)
 
 benchmark: tests/benchmark.c $(BENCHMARK_OBJS)
 	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES)
