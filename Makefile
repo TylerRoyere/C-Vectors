@@ -19,11 +19,11 @@ BENCHMARK_OBJS := $(call src_to_objs, $(BENCHMARK_SRCS), $(OBJ_DIR))
 
 .PHONY: clean generate_vectors
 
-benchmark: $(BENCHMARK_OBJS)
-	$(CC) tests/benchmark.c -o $@ $^ $(CFLAGS) $(INCLUDES)
+benchmark: tests/benchmark.c $(BENCHMARK_OBJS)
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES)
 
-test: $(TEST_OBJS)
-	$(CC) tests/test.c -o $@ $^ $(CFLAGS) $(INCLUDES)
+test: tests/test.c $(TEST_OBJS)
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES)
 
 benchmark_cpp:
 	g++ tests/benchmark.cpp -o benchmark_cpp $(CFLAGS)
@@ -50,4 +50,4 @@ generate_vectors: ./script/mapping.txt
 		./src/vectors/vector_autogen.c > /dev/null
 
 clean:
-	rm $(OBJ_DIR)/* test benchmark benchmark_cpp
+	rm -rf $(OBJ_DIR)/* test benchmark benchmark_cpp
