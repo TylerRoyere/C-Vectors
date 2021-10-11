@@ -131,11 +131,13 @@ typedef unsigned char uchar;
 /* Generic macros (Where the fun begins) */
 
 #define create_vec(T, size) _Generic((*(T*)NULL), \
-    TYPE_TO_VECTORS() \
+    TYPE_TO_VECTORS(), \
+    default: (void) "Invalid type parameter, No vector exists for type" \
     ) (size)
 
 #define create_vec_cleared(T, size) _Generic((*(T*)NULL), \
-    TYPE_TO_VECTORS(_cleared) \
+    TYPE_TO_VECTORS(_cleared), \
+    default: (void) "Invalid type parameter, No vector exists for type" \
     ) (size)
 
 #define init_vec(vec, size) _Generic((vec), \
