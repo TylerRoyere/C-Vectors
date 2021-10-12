@@ -67,6 +67,7 @@ def write_header(header_file, defines, generators, generics, conversions):
 
 def write_source(source_file, impls):
     with open(source_file, "w") as outfile:
+        outfile.write(f"#define VECTOR_HELPERS_INCLUDE_IMPL\n")
         outfile.write(f"#include \"vectors.h\"\n\n")
         outfile.write(f"{impls}")
 

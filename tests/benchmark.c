@@ -9,32 +9,32 @@
 int
 main(void)
 {
-    const int N = 0;
+    const int N = LOOPS + 1;
     for (int repetitions = 0; repetitions < REPEATS; repetitions++) {
         //struct i32_vector iv = create_i32_vector(N);
         //struct i32_vector iv2 = create_i32_vector(N);
         vec_of(int32_t) iv = init_vec(iv, N);
-        vec_of(int32_t) iv2 = create_vec(int32_t, N);
+        vec_of(int32_t) iv2 = init_vec(iv2, N);
 
         for (int ii = 0; ii < LOOPS; ii++) {
             iv = vec_push(iv, ii);
         }
 
-/*      
         int32_t temp;
         vec_foreach_copy(iv, temp) {
-            iv2 = i32_vector_push(iv2, temp*2);
+            iv2 = vec_push(iv2, temp*2);
+        }
+
+/*      
+        int size = vec_size(iv);
+        for (int ii = 0; ii < size; ii++) {
+            iv2 = vec_push(iv2, vec_get(iv, ii) * 2);
         }
 */
 
-        int size = vec_size(iv);
-        for (int ii = 0; ii < size; ii++) {
-            iv2 = vec_push(iv2, vec_get(iv, ii));
-        }
+        vec_of(int32_t) result = create_vec(int32_t, N + 1);
 
-        vec_of(int32_t) result = create_vec_cleared(int32_t, size + 1);
-
-        for (int ii = 0; ii < size; ii++) {
+        for (int ii = 0; ii < vec_size(iv2); ii++) {
             vec_data(iv)[ii] = vec_data(iv2)[ii] + vec_data(iv)[ii];
         }
 

@@ -2,9 +2,17 @@
 benchmark
 benchmark_cpp
 test
+sieve
 
 # Auto generated files
 vector_autogen.*
+
+# clang LSP
+.clangd
+compile_commands.json
+
+# Ctags
+tags
 
 # Prerequisites
 *.d
