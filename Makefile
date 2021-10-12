@@ -64,7 +64,7 @@ generate_vectors: ./script/mapping.txt
 
 run_test: #CFLAGS = -g -O0
 run_test: test 
-	./test && valgrind ./test && scan-build make test
+	./test && valgrind ./test && make clean && scan-build make test
 
 clean:
 	rm -rf $(OBJ_DIR)/* test benchmark benchmark_cpp sieve
