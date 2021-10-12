@@ -1,48 +1,58 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdint.h>
 #include "vectors.h"
 #include "short_string.h"
 
 #define UNUSED __attribute__((unused))
 
-#define ASSERT(x) if (!(x)) fprintf(stderr, #x" False %s %s:%d\n", __func__, __FILE__, __LINE__)
+int error_count;
+
+#define ASSERT(x) if (!(x)) do { \
+    fprintf(stderr, "%s:%d: **ASSERT FAILED** \""#x"\" False %s\n", __FILE__, __LINE__, __func__); \
+    error_count++; \
+    } while(0)
 
 
 int
 test_short_string(void)
 {
-    short_string ss = short_string_create("Hello World!");
-    printf("Text: "SHORT_STRING_FORMAT"\n", ss.str);
-    printf("Text: ");
-    short_string_print(&ss);
-    printf("\n");
-
     vec_of(short_string) ssv = init_vec(ssv, 4);
 
-    vec_push(ssv, short_string_create("1. First I pushed this onto the vector"));
-    vec_push(ssv, short_string_create("2. Then I pushed this"));
-    vec_push(ssv, short_string_create("3. Finally I added this sentence"));
-    vec_push(ssv, short_string_create("4. This is awesome"));
+    const char* strs[] = {
+        "1. First I pushed this onto the vector",
+        "2. Then I pushed this",
+        "3. Finally I added this sentenct",
+        "4. This is awesome"
+    };
+
+    for (unsigned int ii = 0; ii < (sizeof(strs)/sizeof(*strs)); ii++) {
+        vec_push(ssv, short_string_create(strs[ii]));
+    }
 
     for (int ii = 0; ii < vec_size(ssv); ii++) {
-        ss = vec_get(ssv, ii);
-        printf(SHORT_STRING_FORMAT"\n", ss.str);
+        short_string ss = vec_get(ssv, ii);
+        ASSERT(strcmp(ss.str, strs[ii]) == 0);
     }
 
     destroy_vec(ssv);
 
     vec_of(vec_of(int32_t)) ivv = init_vec(ivv, 0);
+    int32_t expected[4];
     for (int ii = 0; ii < 4; ii++) {
         vec_push(ivv, vec_fill_value(create_vec(int32_t, 0), ii));
+        expected[ii] = ii;
     }
 
     vec_of(int32_t) temp;
+    int32_t* iter = expected;
     vec_foreach_copy(ivv, temp) {
-        printf("%d\n", vec_get(temp, 0));
+        ASSERT( vec_get(temp, 0) == *(iter++));
     }
-
+    
+    iter = expected + 3;
     vec_foreach_pop(ivv, temp) {
-        printf("%d\n", vec_get(temp, 0));
+        ASSERT( vec_get(temp, 0) == *(iter--));
         destroy_vec(temp);
     }
     destroy_vec(ivv);
@@ -147,6 +157,7 @@ test_set(void)
 int
 main(void)
 {
+    printf("\n\n");
     int good;
     vec_of(uint64_t) uv;
     uv = create_vec(uint64_t, 0);
@@ -176,5 +187,8 @@ main(void)
     test_get();
 
     test_short_string();
-    return 0;
+    if (error_count) printf("RECORDED ERRORS: %d\n", error_count);
+    else printf("ALL TESTS PASSED\n");
+    printf("\n");
+    return error_count;
 }
