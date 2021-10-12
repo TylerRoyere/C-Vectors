@@ -5,8 +5,10 @@
 
 #include "vector.h"
 
-#define FLEX_ARRAY_VEC_SIZE(member_size, count) \
-    (sizeof(struct vector) + (size_t)((count) << member_size))
+#define GENERATE_VECTOR_STRUCTURE(name) \
+    typedef struct { struct vector* vec; } name
+
+#ifdef VECTOR_HELPERS_INCLUDE_IMPL
 
 #define NULLABLE_ASSIGNMENT(type, ptr) \
     NULLABLE_ASSIGNMENT_MAKE_NAME(type, ptr, __COUNTER__)
@@ -18,10 +20,6 @@
     type buff_name; \
     if ((ptr) == NULL) ptr = &buff_name; \
     *ptr 
-
-#define GENERATE_VECTOR_STRUCTURE(name) \
-    typedef struct { struct vector* vec; } name
-
 
 #define GENERATE_VECTOR_STATIC_FUNCTIONS(name, type, copyable) \
     GENERATE_VECTOR_STATIC_FUNCTIONS_COPYABLE_##copyable(name, type)
@@ -110,6 +108,7 @@ prefix type* name##_data(name vv) \
 #define GENERATE_VECTOR_FUNCTIONS_COPYABLE_true(name, type) \
     GENERATE_VECTOR_FUNCTIONS_COPYABLE_TRUE_PREFIX(, name, type)
 
+#endif
 
 #define GENERATE_VECTOR_FUNCTION_PROTOTYPES(name, type, copyable) \
      GENERATE_VECTOR_FUNCTION_PROTOTYPES_COPYABLE_##copyable (name, type)
@@ -129,6 +128,7 @@ name name##_push(name vv, type value); \
 name name##_pop(const name vv, type* ret); \
 type* name##_last(name vv, int* err); \
 type* name##_data(name vv) \
+
 
 
 //#define GENERATE_VECTOR_FUNCTIONS_COPYABLE_false(type)
