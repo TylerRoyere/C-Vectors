@@ -5,11 +5,17 @@
 #include <stddef.h>
 #include <limits.h>
 
+#ifdef GENERATE_VECTOR_FUNCTIONS_INLINE
+#define VECTOR_HELPERS_INCLUDE_IMPL
+#endif
 #include "vector_helpers.h"
 
 #include "short_string.h"
 
 /* Need to typedef standard types to names with no spaces */
+
+
+#ifdef VEC_OF_WITHOUT_TYPEOF
 
 typedef long long llong;
 typedef unsigned long long ullong;
@@ -19,7 +25,6 @@ typedef unsigned int uint;
 typedef unsigned char uchar;
 
 /* Mapping of standard types to fixed width versions */
-
 #if SIZE_MAX == 0xFFFFFFFFFFFFFFFF
 #define VEC_TYPE_size_t u64v
 #define VEC_TYPE_ssize_t i64v
@@ -31,14 +36,14 @@ typedef unsigned char uchar;
 #define VEC_TYPE_ssize_t i32v
 #else
 #warning "No mapping for long long to fixed width integer"
-#endif
+#endif /* SIZE_MAX */
 
 #if ULLONG_MAX == 0xFFFFFFFFFFFFFFFF
 #define VEC_TYPE_ullong u64v
 #define VEC_TYPE_llong i64v
 #else 
 #warning "No mapping for long long to fixed width integer"
-#endif
+#endif /* ULLONG_MAX */
 
 #if ULONG_MAX == 0xFFFFFFFFFFFFFFFF
 #define VEC_TYPE_ulong u64v
@@ -48,7 +53,7 @@ typedef unsigned char uchar;
 #define VEC_TYPE_ulong i32v
 #else 
 #warning "No mapping for long to fixed width integer"
-#endif
+#endif /* ULONG_MAX */
 
 #if UINT_MAX == 0xFFFFFFFF
 #define VEC_TYPE_uint u32v
@@ -58,58 +63,31 @@ typedef unsigned char uchar;
 #define VEC_TYPE_int i16v
 #else 
 #warning "No mapping for int to fixed width integer"
-#endif
+#endif /* UINT_MAX */
 
 #if USHRT_MAX == 0xFFFF
 #define VEC_TYPE_ushort u16v
 #define VEC_TYPE_short i16v
 #else
 #warning "No mapping for short to fixed width integer"
-#endif
+#endif /* USHRT_MAX */
 
 #if UCHAR_MAX == 0xFF
 #define VEC_TYPE_uchar u8v
 #define VEC_TYPE_char i8v
 #else
 #warning "No mapping for char to fixed width integer"
-#endif
+#endif /* UCHAR_MAX */
 
-#define SPECIFIED_TYPE_TO_VECTOR(T) VEC_TYPE_##T
-#define EXPAND_VECTOR_OF_CONCAT(a, T, b) a##T##b
-
-#ifndef VEC_OF_WITHOUT_TYPEOF
-#define vec_of_INDIR(T) __typeof__(T)
-#define vec_of(T) vec_of_INDIR(create_vec(T, 0))
-#else
 #define vec_of(T) SPECIFIED_TYPE_TO_VECTOR(T)
 #define ptr_to(T) EXPAND_VECTOR_OF_CONCAT(,T,_ptr)
 #define struct(T) EXPAND_VECTOR_OF_CONCAT(struct_,T,)
 #define unsigned(T) EXPAND_VECTOR_OF_CONCAT(u,T,)
 #define long(T) EXPAND_VECTOR_OF_CONCAT(l,T,)
-#endif
-
-#ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
-#define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
-    GENERATE_VECTOR_STRUCTURE(V); \
-    GENERATE_VECTOR_FUNCTION_PROTOTYPES(V, T, copyable);
-#else
-#define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
-    GENERATE_VECTOR_STRUCTURE(V); \
-    GENERATE_VECTOR_STATIC_FUNCTIONS(V, T, copyable)
-#endif
-
-#ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
-#define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable) \
-    GENERATE_VECTOR_FUNCTIONS(V, T, copyable)
-#else
-#define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable)
-#endif
+#define SPECIFIED_TYPE_TO_VECTOR(T) VEC_TYPE_##T
+#define EXPAND_VECTOR_OF_CONCAT(a, T, b) a##T##b
 
 /* Gross hacks as an attempt to handle multi-keyword types */
-
-#define DECLARE_VECTOR_FOR_TYPE(V, T, copyable) \
-    DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable)
-
 #define DECLARE_VECTOR_FOR_TYPE_PTR(type, copyable) \
     GENERATE_VECTOR_STRUCTURE(type); \
     GENERATE_VECTOR_STATIC_FUNCTIONS(type, type*, copyable)
@@ -121,6 +99,35 @@ typedef unsigned char uchar;
 #define DECLARE_VECTOR_FOR_STRUCT_TYPE_PTR(type, copyable) \
     GENERATE_VECTOR_STRUCTURE(type);\
     GENERATE_VECTOR_STATIC_FUNCTIONS(type, struct type*, copyable)
+
+#else
+
+/* We can use typeof ! */
+#define vec_of(T) __typeof__(create_vec(T,0))
+
+#endif /* VEC_OF_WITHOUT_TYPEOF */
+
+
+#ifndef GENERATE_VECTOR_FUNCTIONS_INLINE
+
+#define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
+    GENERATE_VECTOR_STRUCTURE(V); \
+    GENERATE_VECTOR_FUNCTION_PROTOTYPES(V, T, copyable);
+
+#define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable) \
+    GENERATE_VECTOR_FUNCTIONS(V, T, copyable)
+
+#else
+
+#define DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable) \
+    GENERATE_VECTOR_STRUCTURE(V); \
+    GENERATE_VECTOR_STATIC_FUNCTIONS(V, T, copyable)
+#define GENERATE_VECTOR_FUNCTION_DEFINITIONS(V, T, copyable)
+
+#endif /* GENERATE_VECTOR_FUNCTIONS_INLINE */
+
+#define DECLARE_VECTOR_FOR_TYPE(V, T, copyable) \
+    DECLARE_VECTOR_FOR_TYPE_INDIR(V, T, copyable)
 
 #define VECTOR_GENERIC(pre, x, post) \
     x : pre##x##post \
@@ -235,6 +242,19 @@ typedef unsigned char uchar;
 #undef DECLARE_VECTOR_FOR_TYPE_PTR
 #undef DECLARE_VECTOR_FOR_STRUCT_TYPE
 #undef DECLARE_VECTOR_FOR_STRUCT_TYPE_PTR
+#undef GENERATE_VECTOR_STRUCTURE
+
+#ifdef GENERATE_VECTOR_FUNCTIONS_INLINE
+#undef NULLABLE_ASSIGNMENT
+#undef NULLABLE_ASSIGNMENT_MAKE_NAME
+#undef NULLABLE_ASSIGNMENT_INTERNAL
+#undef GENERATE_VECTOR_STATIC_FUNCTIONS
+#undef GENERATE_VECTOR_STATIC_FUNCTIONS_COPYABLE_true
+#undef GENERATE_VECTOR_FUNCTIONS_COPYABLE_TRUE_PREFIX
+#undef GENERATE_VECTOR_FUNCTIONS_COPYABLE_true
+#endif
+
+#undef VECTOR_HELPERS_INCLUDE_IMPL
 
 //#include "vector.c"
 
