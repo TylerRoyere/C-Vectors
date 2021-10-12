@@ -199,11 +199,19 @@ typedef unsigned char uchar;
     VECTOR_GENERICS(,_push) \
     ) (a, b)
 
-#define vec_pop(a, b) _Generic((a), \
+#define vec_pop(a) _Generic((a), \
+    VECTOR_GENERICS(,_pop) \
+    ) (a, NULL)
+
+#define vec_pop_check(a, b) _Generic((a), \
     VECTOR_GENERICS(,_pop) \
     ) (a, b)
 
-#define vec_last(a, b) _Generic((a), \
+#define vec_last(a) _Generic((a), \
+    VECTOR_GENERICS(,_last) \
+    ) (a, NULL)
+
+#define vec_last_check(a, b) _Generic((a), \
     VECTOR_GENERICS(,_last) \
     ) (a, b)
 
@@ -213,7 +221,7 @@ typedef unsigned char uchar;
 
 /* Don't touch my stuff */
 
-#define vec_foreach_copy_anonymous(a, b, counter) \
+#define ANONYMOUS_VEC_FOREACH_COPY(a, b, counter) \
     const int length__##counter = vec_size(a); \
     int go_once__##counter = 1; \
     for (int foreach_loop_counter__##counter = 0; \
@@ -221,18 +229,19 @@ typedef unsigned char uchar;
             go_once__##counter = ++foreach_loop_counter__##counter )\
         for ((b = vec_get(a, foreach_loop_counter__##counter)); \
                 go_once__##counter; \
-                go_once__##counter=0) \
+                go_once__##counter=0)
 
-#define vec_foreach_copy_anonymous_indir(a, b, counter) \
-    vec_foreach_copy_anonymous(a, b, counter)
+#define ANONYMOUS_VEC_FOREACH_POP(a, b, counter) \
+    for (int go_once__##counter = 1; vec_size(a); go_once__##counter = 1) \
+        for (b = vec_pop(a); go_once__##counter; go_once__##counter = 0)
 
 /* Foreach macro for convenience */
 #define vec_foreach_copy(V, value) \
-    vec_foreach_copy_anonymous_indir(V, value, __COUNTER__)
+    ANONYMOUS_VEC_FOREACH_COPY(V, value, __COUNTER__)
 
 /* Maybe you want to pop instead, that's fine too */
 #define vec_foreach_pop(V, value) \
-        while (vec_size(V) && vec_pop(V, &value).vec)
+    ANONYMOUS_VEC_FOREACH_POP(V, value, __COUNTER__)
 
 #include "vector_autogen.h"
 

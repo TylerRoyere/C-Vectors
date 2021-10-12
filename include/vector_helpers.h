@@ -84,9 +84,11 @@ prefix name name##_push(name vv, type value) \
 { \
     return (name) { .vec = vector_push(vv.vec, (void*)&value), }; \
 } \
-prefix name name##_pop(const name vv, type* ret) \
+prefix type name##_pop(const name vv, int* err) \
 { \
-    return (name) { .vec = vector_pop(vv.vec, ret), };  \
+    type ret; \
+    NULLABLE_ASSIGNMENT(int, err) = vector_pop(vv.vec, &ret) == NULL; \
+    return ret; \
 } \
 prefix type* name##_last(name vv, int* err) \
 { \
@@ -125,7 +127,7 @@ type name##_get(const name vv, const int index, int* err); \
 int name##_set(name vv, const int index, type val); \
 type* name##_get_ref(name vv, const int index, int* err); \
 name name##_push(name vv, type value); \
-name name##_pop(const name vv, type* ret); \
+type name##_pop(const name vv, int* ret); \
 type* name##_last(name vv, int* err); \
 type* name##_data(name vv) \
 
