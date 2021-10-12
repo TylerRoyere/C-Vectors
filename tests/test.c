@@ -5,6 +5,8 @@
 
 #define UNUSED __attribute__((unused))
 
+#define ASSERT(x) if (!(x)) fprintf(stderr, #x" False %s %s:%d\n", __func__, __FILE__, __LINE__)
+
 
 int
 test_short_string(void)
@@ -62,9 +64,84 @@ UNUSED    vec_of(unsigned long) ulv;
 UNUSED    vec_of(long long) llv;
 UNUSED    vec_of(unsigned long long) ullv;
 UNUSED    vec_of(size_t) zv;
-UNUSED    vec_of(ssize_t) szv;
 UNUSED    vec_of(unsigned long long) voull;
 UNUSED    vec_of(char**) void_ptrv;
+}
+
+void
+test_cleared_initialization(void)
+{
+    int size = 20;
+    vec_of(int) ivec = init_vec_cleared(ivec, size);
+
+    for (int ii = 0; ii < size; ii++)  {
+        ASSERT(vec_get(ivec, ii) == 0);
+    }
+
+    destroy_vec(ivec);
+
+    ivec = create_vec_cleared(int, size);
+    for (int ii = 0; ii < size; ii++) {
+        ASSERT(vec_get(ivec, ii) == 0);
+    }
+    destroy_vec(ivec);
+}
+
+void
+test_get(void)
+{
+    int size = 20;
+    vec_of(int) ivec = init_vec(ivec, size);
+
+    for (int ii = 0; ii < size; ii++) {
+        vec_push(ivec, ii);
+    }
+
+    for (int ii = 0; ii < size; ii++) {
+        ASSERT( vec_get(ivec, ii) == ii );
+        ASSERT( *vec_get_ref(ivec, ii) == ii);
+    }
+
+    destroy_vec(ivec);
+}
+
+void
+test_push_pop(void)
+{
+    int size = 20;
+    vec_of(int) ivec = init_vec(ivec, 0);
+
+    for (int ii = 0; ii < size; ii++) {
+        vec_push(ivec, ii);
+    }
+
+    for (int ii = size-1; ii >= 0; ii--) {
+        ASSERT( vec_pop(ivec) == ii );
+    }
+
+    destroy_vec(ivec);
+
+}
+
+void
+test_set(void)
+{
+    int size = 20;
+    vec_of(int) ivec = init_vec(ivec, size);
+
+    vec_fill(ivec);
+
+    for (int ii = 0; ii < size; ii++) {
+        vec_set(ivec, ii, ii);
+    }
+
+    ASSERT( *vec_last(ivec) == size-1 );
+
+    for (int ii = 0; ii < size; ii++) {
+        ASSERT( vec_get(ivec, ii) == ii );
+    }
+
+    destroy_vec(ivec);
 }
 
 int
@@ -90,11 +167,13 @@ main(void)
     vec_get_ref(uv, 9);
     vec_get_ref_check(uv, 9, &good);
     vec_push(uv, 12);
-    vec_pop(uv, NULL);
-    vec_last(uv, NULL);
+    vec_pop(uv);
+    vec_last(uv);
     vec_data(uv);
     destroy_vec(uv);
 
+    test_cleared_initialization();
+    test_get();
 
     test_short_string();
     return 0;
