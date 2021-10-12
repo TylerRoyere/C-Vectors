@@ -2,6 +2,7 @@
 benchmark
 benchmark_cpp
 test
+sieve
 
 # Auto generated files
 vector_autogen.*

@@ -67,4 +67,4 @@ run_test: test
 	./test && valgrind ./test && scan-build make test
 
 clean:
-	rm -rf $(OBJ_DIR)/* test benchmark benchmark_cpp
+	rm -rf $(OBJ_DIR)/* test benchmark benchmark_cpp sieve
