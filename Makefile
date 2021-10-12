@@ -21,6 +21,10 @@ TEST_OBJS := $(call src_to_objs, $(TEST_SRCS), $(OBJ_DIR))
 BENCHMARK_SRCS := src/vectors/vector.c src/vectors/vector_autogen.c
 BENCHMARK_OBJS := $(call src_to_objs, $(BENCHMARK_SRCS), $(OBJ_DIR))
 
+SIEVE_SRCS := src/vectors/vector.c src/vectors/vector_autogen.c
+SIEVE_OBJS := $(call src_to_objs, $(SIEVE_SRCS), $(OBJ_DIR))
+
+
 .PHONY: clean generate_vectors test
 
 all: $(TARGETS)
@@ -33,6 +37,9 @@ test: tests/test.c $(TEST_OBJS)
 
 benchmark_cpp:
 	$(CXX) tests/benchmark.cpp -o benchmark_cpp $(CPPFLAGS)
+
+sieve: tests/sieve.c $(SIEVE_OBJS)
+	$(CC) -o $@ $^ $(CFLAGS) $(INCLUDES)
 
 $(OBJ_DIR)/%.o: %.c %.h | $(OBJ_DIR)
 	$(CC) -c $< -o $@ $(CFLAGS) $(INCLUDES)
