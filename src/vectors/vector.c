@@ -67,12 +67,14 @@ create_vector_cleared(const int capacity, const int member_size)
     ASSERT(capacity > 0 && "Need positive, non-zero capacity");
     
     struct vector* result = malloc(sizeof(struct vector));
-    void* data = calloc((size_t)capacity << (size_t)member_size, sizeof(char));
+    int log2_member_size = internal_ceil_log_2(member_size);
+    void* data = calloc((size_t)capacity << (size_t)log2_member_size, sizeof(char));
 
     *result = (struct vector) {
         .capacity = capacity,
         .size = capacity,
-        .member_size = internal_ceil_log_2(member_size),
+        .member_size = member_size,
+        .member_size_log2 = log2_member_size,
         .data = data,
     };
 
