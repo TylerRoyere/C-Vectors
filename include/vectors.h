@@ -222,9 +222,9 @@ typedef unsigned char uchar;
 /* Don't touch my stuff */
 
 #define ANONYMOUS_VEC_FOREACH_COPY(a, b, counter) \
-    const int length__##counter = vec_size(a); \
-    int go_once__##counter = 1; \
-    for (int foreach_loop_counter__##counter = 0; \
+    const unsigned int length__##counter = vec_size(a); \
+    unsigned int go_once__##counter = 1; \
+    for (unsigned int foreach_loop_counter__##counter = 0; \
             foreach_loop_counter__##counter < length__##counter; \
             go_once__##counter = ++foreach_loop_counter__##counter )\
         for ((b = vec_get(a, foreach_loop_counter__##counter)); \
@@ -232,7 +232,7 @@ typedef unsigned char uchar;
                 go_once__##counter=0)
 
 #define ANONYMOUS_VEC_FOREACH_POP(a, b, counter) \
-    for (int go_once__##counter = 1; vec_size(a); go_once__##counter = 1) \
+    for (unsigned int go_once__##counter = 1; vec_size(a); go_once__##counter = 1) \
         for (b = vec_pop(a); go_once__##counter; go_once__##counter = 0)
 
 /* Foreach macro for convenience */
