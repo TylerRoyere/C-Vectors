@@ -15,5 +15,11 @@ jobs:
     - uses: actions/checkout@v2
     - name: make
       run: make
-    - name: make check
-      run: make run_test
+    - name: benchmark
+      run: ./benchmark
+    - name: test
+      run: ./test
+    - name: valgrind
+      run: |
+        sudo apt install -y valgrind
+        valgrind -v --leak-check=full --show-leak-kinds=all ./test
