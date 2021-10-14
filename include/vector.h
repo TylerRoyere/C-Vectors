@@ -18,6 +18,7 @@ struct vector;
 struct vector {
     int size;
     int member_size;
+    int member_size_log2;
     int capacity;
     void *data;
 };
