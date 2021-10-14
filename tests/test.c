@@ -30,7 +30,7 @@ test_short_string(void)
         vec_push(ssv, short_string_create(strs[ii]));
     }
 
-    for (int ii = 0; ii < vec_size(ssv); ii++) {
+    for (unsigned int ii = 0; ii < vec_size(ssv); ii++) {
         short_string ss = vec_get(ssv, ii);
         ASSERT(strcmp(ss.str, strs[ii]) == 0);
     }
@@ -81,17 +81,17 @@ UNUSED    vec_of(char**) void_ptrv;
 void
 test_cleared_initialization(void)
 {
-    int size = 20;
+    unsigned int size = 20;
     vec_of(int) ivec = init_vec_cleared(ivec, size);
 
-    for (int ii = 0; ii < size; ii++)  {
+    for (unsigned int ii = 0; ii < size; ii++)  {
         ASSERT(vec_get(ivec, ii) == 0);
     }
 
     destroy_vec(ivec);
 
     ivec = create_vec_cleared(int, size);
-    for (int ii = 0; ii < size; ii++) {
+    for (unsigned int ii = 0; ii < size; ii++) {
         ASSERT(vec_get(ivec, ii) == 0);
     }
     destroy_vec(ivec);
@@ -100,16 +100,16 @@ test_cleared_initialization(void)
 void
 test_get(void)
 {
-    int size = 20;
+    unsigned int size = 20;
     vec_of(int) ivec = init_vec(ivec, size);
 
-    for (int ii = 0; ii < size; ii++) {
-        vec_push(ivec, ii);
+    for (unsigned int ii = 0; ii < size; ii++) {
+        vec_push(ivec, (int)ii);
     }
 
-    for (int ii = 0; ii < size; ii++) {
-        ASSERT( vec_get(ivec, ii) == ii );
-        ASSERT( *vec_get_ref(ivec, ii) == ii);
+    for (unsigned int ii = 0; ii < size; ii++) {
+        ASSERT( vec_get(ivec, ii) == (int)ii );
+        ASSERT( *vec_get_ref(ivec, ii) == (int)ii);
     }
 
     destroy_vec(ivec);
@@ -136,19 +136,19 @@ test_push_pop(void)
 void
 test_set(void)
 {
-    int size = 20;
+    unsigned int size = 20;
     vec_of(int) ivec = init_vec(ivec, size);
 
     vec_fill(ivec);
 
-    for (int ii = 0; ii < size; ii++) {
-        vec_set(ivec, ii, ii);
+    for (unsigned int ii = 0; ii < size; ii++) {
+        vec_set(ivec, ii, (int)ii);
     }
 
-    ASSERT( *vec_last(ivec) == size-1 );
+    ASSERT( *vec_last(ivec) == (int)size-1 );
 
-    for (int ii = 0; ii < size; ii++) {
-        ASSERT( vec_get(ivec, ii) == ii );
+    for (unsigned int ii = 0; ii < size; ii++) {
+        ASSERT( vec_get(ivec, ii) == (int)ii );
     }
 
     destroy_vec(ivec);

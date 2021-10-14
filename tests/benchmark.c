@@ -9,14 +9,14 @@
 int
 main(void)
 {
-    const int N = LOOPS + 1;
+    const unsigned int N = LOOPS + 1;
     for (int repetitions = 0; repetitions < REPEATS; repetitions++) {
         //struct i32_vector iv = create_i32_vector(N);
         //struct i32_vector iv2 = create_i32_vector(N);
         vec_of(int32_t) iv = init_vec(iv, N);
         vec_of(int32_t) iv2 = init_vec(iv2, N);
 
-        for (int ii = 0; ii < LOOPS; ii++) {
+        for (int ii = 0; ii < (int)LOOPS; ii++) {
             iv = vec_push(iv, ii);
         }
 
@@ -34,7 +34,7 @@ main(void)
 
         vec_of(int32_t) result = create_vec(int32_t, N + 1);
 
-        for (int ii = 0; ii < vec_size(iv2); ii++) {
+        for (unsigned int ii = 0; ii < vec_size(iv2); ii++) {
             vec_data(iv)[ii] = vec_data(iv2)[ii] + vec_data(iv)[ii];
         }
 
