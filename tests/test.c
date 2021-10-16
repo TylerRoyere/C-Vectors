@@ -40,7 +40,9 @@ test_short_string(void)
     vec_of(vec_of(int32_t)) ivv = init_vec(ivv, 0);
     int32_t expected[4];
     for (int ii = 0; ii < 4; ii++) {
-        vec_push(ivv, vec_fill_value(create_vec(int32_t, 0), ii));
+        vec_of(int32_t) temp = create_vec(int32_t, 0);
+        vec_fill_value(temp, ii);
+        vec_push(ivv, temp);
         expected[ii] = ii;
     }
 
@@ -145,10 +147,27 @@ test_set(void)
         vec_set(ivec, ii, ii);
     }
 
-    ASSERT( *vec_last(ivec) == size-1 );
+    ASSERT( vec_last(ivec) == size-1 );
 
     for (int ii = 0; ii < size; ii++) {
         ASSERT( vec_get(ivec, ii) == ii );
+    }
+
+    destroy_vec(ivec);
+}
+
+void
+test_iterate(void)
+{
+    int size = 20;
+    vec_of(int) ivec = init_vec(ivec, size);
+
+    for (int ii = 0; ii < size; ii++) {
+        vec_push(ivec, ii);
+    }
+
+    for (int* iter = vec_begin(ivec), counter = 0; iter != vec_end(ivec); iter++, counter++) {
+        ASSERT( *iter == counter);
     }
 
     destroy_vec(ivec);
@@ -183,10 +202,13 @@ main(void)
     vec_data(uv);
     destroy_vec(uv);
 
+    test_short_string();
     test_cleared_initialization();
     test_get();
+    test_push_pop();
+    test_set();
+    test_iterate();
 
-    test_short_string();
     if (error_count) printf("RECORDED ERRORS: %d\n", error_count);
     else printf("ALL TESTS PASSED\n");
     printf("\n");
