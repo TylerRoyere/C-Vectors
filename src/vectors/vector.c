@@ -63,7 +63,7 @@ create_vector_cleared(const int capacity, const int member_size)
     return result;
 }
 
-struct vector* 
+void
 vector_fill_value(struct vector* vv, void* fill)
 {
     vv->size = vv->capacity;
@@ -73,22 +73,19 @@ vector_fill_value(struct vector* vv, void* fill)
                     (size_t)vv->member_size);
         }
     }
-    return vv;
 }
 
-struct vector* 
+void
 vector_fill(struct vector* vv)
 {
     vv->size = vv->capacity;
-    return vv;
 }
 
-int
+void
 destroy_vector(struct vector* vv)
 {
     free(vv->data);
     free(vv);
-    return 0;
 }
 
 int
@@ -97,14 +94,12 @@ vector_size(struct vector* vv)
     return vv->size;
 }
 
-struct vector*
+void
 vector_resize(struct vector* vv, const int new_capacity)
 {
     assert(new_capacity > 0);
 
     vector_internal_resize(vv, new_capacity);
-
-    return vv;
 }
 
 int
@@ -143,7 +138,7 @@ vector_get_ref(struct vector* vv, const int index, void** ret)
     return 0;
 }
 
-struct vector*
+void
 vector_push(struct vector* vv, void* data)
 {
     if (vv->size == vv->capacity) {
@@ -153,26 +148,17 @@ vector_push(struct vector* vv, void* data)
     void* ref = vector_internal_get_element_ref(vv, vv->size);
     memcpy(ref, data, (size_t)vv->member_size);
     vv->size++;
-
-    return vv;
 }
 
-struct vector*
+void
 vector_pop(struct vector* vv, void* ret)
 {
+    assert(vv->size > 0 && "Trying to pop from empty vector\n");
     vv->size--;
     if (ret != NULL) {
         void* ref = vector_internal_get_element_ref(vv, vv->size);
         memcpy(ret, ref, (size_t)vv->member_size);
     }
-
-    return vv;
-}
-
-int
-vector_last(struct vector* vv, void** ret)
-{
-    return vector_get_ref(vv, vv->size-1, ret);
 }
 
 void*
