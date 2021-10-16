@@ -17,12 +17,12 @@ main(void)
         vec_of(int32_t) iv2 = init_vec(iv2, N);
 
         for (int ii = 0; ii < LOOPS; ii++) {
-            iv = vec_push(iv, ii);
+            vec_push(iv, ii);
         }
 
         int32_t temp;
         vec_foreach_copy(iv, temp) {
-            iv2 = vec_push(iv2, temp*2);
+            vec_push(iv2, temp*2);
         }
 
 /*      

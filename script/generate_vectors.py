@@ -63,13 +63,13 @@ def write_header(header_file, defines, generators, generics, conversions):
         outfile.write(f"/* Map contained types to vector creation function */\n")
         outfile.write(conversions)
         outfile.write("\n\n")
-        outfile.write(f"#endif /* {guard} */")
+        outfile.write(f"#endif /* {guard} */\n")
 
 def write_source(source_file, impls):
     with open(source_file, "w") as outfile:
         outfile.write(f"#define VECTOR_HELPERS_INCLUDE_IMPL\n")
         outfile.write(f"#include \"vectors.h\"\n\n")
-        outfile.write(f"{impls}")
+        outfile.write(f"{impls}\n")
 
 def generate_header_mappings(mappings):
     # first lets generate type defines

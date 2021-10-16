@@ -201,10 +201,14 @@ typedef unsigned char uchar;
 
 #define vec_pop(a) _Generic((a), \
     VECTOR_GENERICS(,_pop) \
+    ) (a)
+
+#define vec_first(a) _Generic((a), \
+    VECTOR_GENERICS(,_first) \
     ) (a, NULL)
 
-#define vec_pop_check(a, b) _Generic((a), \
-    VECTOR_GENERICS(,_pop) \
+#define vec_first_check(a, b) _Generic((a), \
+    VECTOR_GENERICS(,_first) \
     ) (a, b)
 
 #define vec_last(a) _Generic((a), \
@@ -217,6 +221,14 @@ typedef unsigned char uchar;
 
 #define vec_data(a) _Generic((a), \
     VECTOR_GENERICS(,_data) \
+    ) (a)
+
+#define vec_begin(a) _Generic((a), \
+    VECTOR_GENERICS(,_begin) \
+    ) (a)
+
+#define vec_end(a) _Generic((a), \
+    VECTOR_GENERICS(,_end) \
     ) (a)
 
 /* Don't touch my stuff */
@@ -268,3 +280,4 @@ typedef unsigned char uchar;
 //#include "vector.c"
 
 #endif
+

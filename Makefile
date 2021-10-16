@@ -1,7 +1,7 @@
 INCLUDE_DIRS := ./include
 INCLUDES := $(foreach dir, $(INCLUDE_DIRS), -I$(dir))
 USR_DEFS ?= 
-USR_DEFS += #-DGENERATE_VECTOR_FUNCTIONS_INLINE
+USR_DEFS += #-DNDEBUG -DGENERATE_VECTOR_FUNCTIONS_INLINE
 CFLAGS := -std=c17 -Wpedantic -Wall -Wextra -fno-common -Wconversion -flto -O3 $(USR_DEFS)
 CPPFLAGS := -std=c++2a -Wpedantic -Wall -Wextra -fno-common -Wconversion -flto -O3 $(USR_DEFS)
  
